@@ -33,7 +33,6 @@ export function Textarea({
         invalid ? "border-red-500 focus:border-red-500" : "",
         className,
       )}
-
       {...props}
     />
   );

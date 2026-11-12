@@ -16,7 +16,7 @@ const variants: Record<InputVariant, string> = {
 export function Input({
   variant = "light",
   invalid = false,
-  className = "",
+  className,
   type = "text",
   ...props
 }: InputProps) {
