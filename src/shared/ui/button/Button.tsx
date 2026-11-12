@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 
-import { Icon, type IconName } from "@/shared/ui";
+import { Icon, type IconName } from "@/shared/ui/icon/Icon";
+import clsx from "clsx";
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
@@ -62,7 +63,7 @@ export function Button({
   isLoading = false,
   fullWidth = false,
   disabled,
-  className = "",
+  className,
   children,
   type = "button",
   ref,
@@ -70,15 +71,13 @@ export function Button({
 }: ButtonProps) {
   const isDisabled = disabled || isLoading;
 
-  const buttonClassName = [
+  const buttonClassName = clsx(
     baseStyles,
     variantStyles[variant],
     sizeStyles[size],
-    fullWidth ? "w-full" : "",
+    fullWidth && "w-full",
     className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  );
 
   return (
     <button

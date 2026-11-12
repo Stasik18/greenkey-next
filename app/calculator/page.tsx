@@ -1,3 +1,5 @@
+import { CalculatorPage } from "@/pages/calculator";
+
 export default function CalculatorRoute() {
-  return <main>Calculator</main>;
+  return <CalculatorPage />;
 }

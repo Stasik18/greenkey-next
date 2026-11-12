@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 
 type TypographyVariant =
@@ -50,15 +51,12 @@ const defaultTags: Record<TypographyVariant, VariantTag> = {
 export function Typography<T extends ElementType = "p">({
   as,
   variant = "body",
-  className = "",
+  className,
   ...props
 }: TypographyProps<T>) {
   const Component = as ?? defaultTags[variant];
 
   return (
-    <Component
-      className={`${variantStyles[variant]} ${className}`.trim()}
-      {...props}
-    />
+    <Component className={clsx(variantStyles[variant], className)} {...props} />
   );
 }

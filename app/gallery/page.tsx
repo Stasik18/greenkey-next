@@ -1,3 +1,5 @@
+import { GalleryPage } from "@/pages/gallery";
+
 export default function GalleryRoute() {
-  return <main>Gallery</main>;
+  return <GalleryPage />;
 }

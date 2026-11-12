@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { InputHTMLAttributes } from "react";
 
 type InputVariant = "light" | "dark";
@@ -23,7 +24,7 @@ export function Input({
     <input
       type={type}
       aria-invalid={invalid || undefined}
-      className={[
+      className={clsx(
         "w-full min-w-0 rounded border-2 px-4 py-3.5 text-[15px]",
         "outline-none transition-colors duration-200",
         "focus:border-brand-green",
@@ -31,9 +32,7 @@ export function Input({
         variants[variant],
         invalid ? "border-red-500 focus:border-red-500" : "",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
       {...props}
     />
   );

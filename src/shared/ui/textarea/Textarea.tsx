@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import type { TextareaHTMLAttributes } from "react";
 
 type TextareaVariant = "light" | "dark";
@@ -15,7 +16,7 @@ const variants: Record<TextareaVariant, string> = {
 export function Textarea({
   variant = "light",
   invalid = false,
-  className = "",
+  className,
   rows = 4,
   ...props
 }: TextareaProps) {
@@ -23,7 +24,7 @@ export function Textarea({
     <textarea
       rows={rows}
       aria-invalid={invalid || undefined}
-      className={[
+      className={clsx(
         "w-full min-w-0 resize-y rounded border-2 px-4 py-3.5 text-[15px]",
         "outline-none transition-colors duration-200",
         "focus:border-brand-green",
@@ -31,9 +32,8 @@ export function Textarea({
         variants[variant],
         invalid ? "border-red-500 focus:border-red-500" : "",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
+
       {...props}
     />
   );
