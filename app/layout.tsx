@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+
 import { Inter, Montserrat } from "next/font/google";
 
+import { MainLayout } from "@/app/layouts/MainLayout";
 import "@/app/globals.css";
 
 const inter = Inter({
@@ -38,14 +41,14 @@ export const metadata: Metadata = {
 };
 
 interface RootLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ru">
       <body className={`${inter.variable} ${montserrat.variable}`}>
-        {children}
+        <MainLayout>{children}</MainLayout>
       </body>
     </html>
   );
