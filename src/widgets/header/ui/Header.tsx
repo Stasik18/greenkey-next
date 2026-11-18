@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import clsx from "clsx";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
@@ -11,6 +12,10 @@ import {
   useLockBodyScroll,
   useMediaQuery,
 } from "@/shared/lib/hooks";
+
+interface HeaderProps {
+  className?: string;
+}
 
 const PHONE = "+79035120326";
 const PHONE_LABEL = "+7 (903) 512-03-26";
@@ -35,7 +40,7 @@ function isInternalAnchor(href: string) {
   return href.startsWith("#");
 }
 
-export function Header() {
+export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const menu = useDisclosure();
@@ -54,30 +59,31 @@ export function Header() {
   );
 
   useLockBodyScroll(menu.isOpen);
-
   useKeyDown("Escape", menu.close, menu.isOpen);
 
-  // Состояние шапки при прокрутке страницы.
+  // Отслеживаем прокрутку страницы.
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 60);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // Закрываем мобильное меню при переходе на десктопную ширину.
+  // Закрываем мобильное меню при переходе на десктоп.
   useEffect(() => {
     if (isDesktop && menu.isOpen) {
       menu.close();
     }
   }, [isDesktop, menu.isOpen, menu.close]);
 
-  // Управляем фокусом при открытии и закрытии меню.
+  // Управляем фокусом мобильного меню.
   useEffect(() => {
     if (!menu.isOpen || isDesktop) return;
 
@@ -97,27 +103,28 @@ export function Header() {
   const mobileMenu = isClient
     ? createPortal(
         <div
-          className={[
+          className={clsx(
             "fixed inset-0 z-[200] bg-black/40",
             "transition-opacity duration-300",
             menu.isOpen
               ? "visible opacity-100"
               : "invisible pointer-events-none opacity-0",
-          ].join(" ")}
+          )}
           aria-hidden={!menu.isOpen}
         >
           <div
             ref={menuRef}
+            id="mobile-navigation"
             role="dialog"
             aria-modal="true"
-            id="mobile-navigation"
             aria-label="Мобильная навигация"
-            className={[
+            inert={!menu.isOpen}
+            className={clsx(
               "absolute inset-y-0 right-0 flex w-full max-w-md flex-col",
               "overflow-y-auto bg-white px-6 py-8 shadow-2xl",
               "transition-transform duration-300",
               menu.isOpen ? "translate-x-0" : "translate-x-full",
-            ].join(" ")}
+            )}
           >
             <div className="mb-12 flex items-center justify-between">
               <Link
@@ -132,7 +139,11 @@ export function Header() {
                 type="button"
                 onClick={closeMenu}
                 aria-label="Закрыть меню"
-                className="flex size-11 items-center justify-center rounded-full border border-border text-2xl transition-colors hover:bg-surface-muted"
+                className={clsx(
+                  "flex size-11 items-center justify-center",
+                  "rounded-full border border-border text-2xl",
+                  "transition-colors hover:bg-surface-muted",
+                )}
               >
                 &times;
               </button>
@@ -146,8 +157,10 @@ export function Header() {
                       <a
                         href={item.href}
                         onClick={closeMenu}
-                        tabIndex={menu.isOpen ? 0 : -1}
-                        className="block py-4 font-heading text-lg font-bold transition-colors hover:text-brand-green"
+                        className={clsx(
+                          "block py-4 font-heading text-lg font-bold",
+                          "transition-colors hover:text-brand-green",
+                        )}
                       >
                         {item.label}
                       </a>
@@ -155,8 +168,10 @@ export function Header() {
                       <Link
                         href={item.href}
                         onClick={closeMenu}
-                        tabIndex={menu.isOpen ? 0 : -1}
-                        className="block py-4 font-heading text-lg font-bold transition-colors hover:text-brand-green"
+                        className={clsx(
+                          "block py-4 font-heading text-lg font-bold",
+                          "transition-colors hover:text-brand-green",
+                        )}
                       >
                         {item.label}
                       </Link>
@@ -168,7 +183,6 @@ export function Header() {
 
             <a
               href={`tel:${PHONE}`}
-              tabIndex={menu.isOpen ? 0 : -1}
               className="mt-auto pt-10 font-heading text-xl font-extrabold"
             >
               {PHONE_LABEL}
@@ -183,14 +197,15 @@ export function Header() {
     <>
       <header
         id="nav"
-        className={[
-          "fixed inset-x-0 top-0 z-[100]",
+        className={clsx(
+          "sticky top-0 z-[100]",
           "flex items-center justify-between",
           "border-b border-black/5 bg-white/95",
           "backdrop-blur-[14px]",
           "transition-[padding] duration-300",
           isScrolled ? "px-6 py-3 md:px-12" : "px-6 py-[18px] md:px-12",
-        ].join(" ")}
+          className,
+        )}
       >
         <Link
           href="/"
@@ -206,18 +221,40 @@ export function Header() {
                 {isInternalAnchor(item.href) ? (
                   <a
                     href={item.href}
-                    className="group relative whitespace-nowrap text-[0.78rem] font-bold uppercase tracking-wider transition-colors hover:text-brand-green"
+                    className={clsx(
+                      "group relative whitespace-nowrap",
+                      "text-[0.78rem] font-bold uppercase tracking-wider",
+                      "transition-colors hover:text-brand-green",
+                    )}
                   >
                     {item.label}
-                    <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-green transition-all duration-300 group-hover:w-full" />
+
+                    <span
+                      className={clsx(
+                        "absolute -bottom-1 left-0 h-0.5 w-0",
+                        "bg-brand-green transition-all duration-300",
+                        "group-hover:w-full",
+                      )}
+                    />
                   </a>
                 ) : (
                   <Link
                     href={item.href}
-                    className="group relative whitespace-nowrap text-[0.78rem] font-bold uppercase tracking-wider transition-colors hover:text-brand-green"
+                    className={clsx(
+                      "group relative whitespace-nowrap",
+                      "text-[0.78rem] font-bold uppercase tracking-wider",
+                      "transition-colors hover:text-brand-green",
+                    )}
                   >
                     {item.label}
-                    <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-brand-green transition-all duration-300 group-hover:w-full" />
+
+                    <span
+                      className={clsx(
+                        "absolute -bottom-1 left-0 h-0.5 w-0",
+                        "bg-brand-green transition-all duration-300",
+                        "group-hover:w-full",
+                      )}
+                    />
                   </Link>
                 )}
               </li>
@@ -228,7 +265,13 @@ export function Header() {
         <div className="flex shrink-0 items-center gap-3">
           <a
             href={`tel:${PHONE}`}
-            className="hidden whitespace-nowrap rounded bg-brand-green px-6 py-3 font-heading text-xs font-extrabold uppercase tracking-wider transition-colors hover:bg-brand-orange hover:text-white min-[1290px]:block"
+            className={clsx(
+              "hidden whitespace-nowrap rounded",
+              "bg-brand-green px-6 py-3",
+              "font-heading text-xs font-extrabold uppercase tracking-wider",
+              "transition-colors hover:bg-brand-orange hover:text-white",
+              "min-[1290px]:block",
+            )}
           >
             {PHONE_LABEL}
           </a>
@@ -240,25 +283,32 @@ export function Header() {
             aria-label={menu.isOpen ? "Закрыть меню" : "Открыть меню"}
             aria-expanded={menu.isOpen}
             aria-controls="mobile-navigation"
-            className="flex size-11 flex-col items-center justify-center gap-[6px] rounded border border-border transition-colors hover:bg-surface-muted min-[1111px]:hidden"
+            className={clsx(
+              "flex size-11 flex-col items-center justify-center gap-[6px]",
+              "rounded border border-border",
+              "transition-colors hover:bg-surface-muted",
+              "min-[1111px]:hidden",
+            )}
           >
             <span
-              className={[
+              className={clsx(
                 "h-0.5 w-6 bg-ink transition-transform duration-300",
-                menu.isOpen ? "translate-y-2 rotate-45" : "",
-              ].join(" ")}
+                menu.isOpen && "translate-y-2 rotate-45",
+              )}
             />
+
             <span
-              className={[
+              className={clsx(
                 "h-0.5 w-6 bg-ink transition-opacity duration-300",
-                menu.isOpen ? "opacity-0" : "",
-              ].join(" ")}
+                menu.isOpen && "opacity-0",
+              )}
             />
+
             <span
-              className={[
+              className={clsx(
                 "h-0.5 w-6 bg-ink transition-transform duration-300",
-                menu.isOpen ? "-translate-y-2 -rotate-45" : "",
-              ].join(" ")}
+                menu.isOpen && "-translate-y-2 -rotate-45",
+              )}
             />
           </button>
         </div>
@@ -267,7 +317,13 @@ export function Header() {
       <a
         href={`tel:${PHONE}`}
         aria-label={`Позвонить ${PHONE_LABEL}`}
-        className="fixed bottom-6 right-6 z-[90] flex size-14 items-center justify-center rounded-full bg-brand-green text-xl shadow-lg transition-colors hover:bg-brand-orange min-[1290px]:hidden"
+        className={clsx(
+          "fixed bottom-6 right-6 z-[90]",
+          "flex size-14 items-center justify-center",
+          "rounded-full bg-brand-green text-xl shadow-lg",
+          "transition-colors hover:bg-brand-orange",
+          "min-[1290px]:hidden",
+        )}
       >
         <svg
           viewBox="0 0 24 24"
