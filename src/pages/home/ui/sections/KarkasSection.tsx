@@ -96,7 +96,7 @@ export function KarkasSection() {
 
           <Link
             href="/calculator"
-            className="mt-5 flex items-center justify-between gap-5 rounded-xl bg-ink p-6 text-white transition-colors hover:bg-ink/90"
+            className="group mt-5 flex items-center justify-between gap-5 rounded-xl bg-ink p-6 text-white transition duration-200 hover:-translate-y-1 hover:bg-ink/95 hover:shadow-xl"
           >
             <span>
               <strong className="block font-heading">
@@ -107,7 +107,10 @@ export function KarkasSection() {
                 участок - и узнайте точную стоимость
               </span>
             </span>
-            <span aria-hidden="true" className="text-3xl text-brand-green">
+            <span
+              aria-hidden="true"
+              className="text-3xl text-brand-green transition-colors duration-200 group-hover:text-brand-orange"
+            >
               →
             </span>
           </Link>

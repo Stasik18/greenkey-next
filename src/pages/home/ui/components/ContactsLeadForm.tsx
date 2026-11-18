@@ -161,7 +161,12 @@ function Consent({ id }: { id: string }) {
       />
       <label htmlFor={id}>
         Согласен на обработку персональных данных и принимаю{" "}
-        <Link href="/privacy" target="_blank" className="underline">
+        <Link
+          href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
           политику конфиденциальности
         </Link>
         .

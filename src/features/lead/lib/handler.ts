@@ -242,6 +242,11 @@ export async function handleLeadRequest(
     return fail(403, "origin_rejected", "Запрос отклонён.");
   }
 
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
+    return fail(415, "unsupported_media_type", "Ожидается JSON-запрос.");
+  }
+
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > MAX_BODY_BYTES) {
     return fail(413, "payload_too_large", "Слишком большой запрос.");

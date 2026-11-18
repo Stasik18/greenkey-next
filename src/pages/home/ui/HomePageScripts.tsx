@@ -1,24 +1,7 @@
-import Script from "next/script";
-
-const importMap = {
-  imports: {
-    three: "/assets/vendor/three/three.module.min.js",
-    "three/addons/": "/assets/vendor/three/addons/",
-  },
-};
-
+/**
+ * The legacy 3D scene is intentionally disabled.
+ * The Build section now renders a lightweight placeholder for a future slider.
+ */
 export function HomePageScripts() {
-  return (
-    <>
-      <script
-        type="importmap"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(importMap) }}
-      />
-      <Script
-        src="/assets/js/build3d/index.js"
-        type="module"
-        strategy="afterInteractive"
-      />
-    </>
-  );
+  return null;
 }

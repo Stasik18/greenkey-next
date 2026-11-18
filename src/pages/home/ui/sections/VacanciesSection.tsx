@@ -66,7 +66,7 @@ export function VacanciesSection() {
             ))}
           </div>
 
-          <div className="vac-card rounded-2xl bg-white p-6 text-ink md:p-8">
+          <div className="vac-card rounded-2xl bg-white p-8 text-ink md:p-8">
             <Typography as="h3" variant="h3">
               Отклик на вакансию
             </Typography>
@@ -76,7 +76,7 @@ export function VacanciesSection() {
             </Typography>
             <LeadForm
               source="index-vacancy"
-              className="contact-form mt-6 space-y-4"
+              className="contact-form mt-7 space-y-5"
             >
               <div className="form-row grid gap-4 sm:grid-cols-2">
                 <FormField id="vac-name" label="Имя">

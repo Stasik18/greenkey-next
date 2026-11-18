@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 /*
@@ -18,8 +19,8 @@
   --color-muted: #6b6b6b;
 
   /* Typography */
-  --font-heading: var(--font-montserrat), sans-serif;
-  --font-sans: var(--font-inter), sans-serif;
+  --font-heading: "Montserrat", sans-serif;
+  --font-sans: "Inter", sans-serif;
 }
 
 /*
@@ -27,6 +28,13 @@
  */
 
 @layer base {
+  :root {
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Montserrat", sans-serif;
+    --font-inter: "Inter", sans-serif;
+    --font-montserrat: "Montserrat", sans-serif;
+  }
+
   *,
   *::before,
   *::after {
@@ -112,5 +120,76 @@
   *::before,
   *::after {
     scroll-behavior: auto !important;
+  }
+}
+
+/* Shared consent control used by every lead form across the site. */
+.form-consent-check {
+  display: grid !important;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 10px;
+  row-gap: 0;
+  width: 100%;
+  margin: 16px 0 18px !important;
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: left;
+}
+.form-consent-check input[type="checkbox"] {
+  display: block;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin: 2px 0 0 !important;
+  padding: 0;
+  accent-color: var(--color-brand-green);
+  cursor: pointer;
+}
+.form-consent-check label {
+  display: block;
+  min-width: 0;
+  margin: 0;
+  line-height: 1.45;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.form-consent-check a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.form-consent-check input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-brand-green);
+  outline-offset: 3px;
+}
+
+/* Shared modal ergonomics: content stays reachable on short viewports. */
+.home-modal {
+  padding-top: max(24px, env(safe-area-inset-top));
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+.home-modal-panel {
+  max-height: calc(
+    100dvh -
+      max(48px, env(safe-area-inset-top) + env(safe-area-inset-bottom) + 32px)
+  );
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.home-modal-panel .form-consent-check {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+@media (max-width: 640px) {
+  .home-modal {
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+  .home-modal-panel {
+    padding: 24px 20px;
+    border-radius: 16px;
   }
 }

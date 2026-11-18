@@ -55,13 +55,15 @@ export function GallerySection() {
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
               </div>
-              <div className="gc-cap p-6 md:p-7">
-                <Typography variant="h3" className="text-white">
-                  {project.title}
-                </Typography>
-                <p className="gc-addr mt-2 text-sm text-white/55">
-                  {project.details}
-                </p>
+              <div className="gc-cap relative flex items-end p-6 md:p-7">
+                <div className="min-w-0 pr-2">
+                  <Typography variant="h3" className="text-white">
+                    {project.title}
+                  </Typography>
+                  <p className="gc-addr mt-2 text-sm text-white/55">
+                    {project.details}
+                  </p>
+                </div>
               </div>
             </Link>
           ))}

@@ -359,29 +359,35 @@
   color: var(--black);
 }
 .gallery-page .obj-open .oo-arrow {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  flex: 0 0 36px;
   border-radius: 50%;
-  background: var(--black);
-  color: var(--green);
-  display: flex;
+  background: var(--green);
+  color: var(--black);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 18px;
+  line-height: 1;
   transition:
     background 0.2s,
+    color 0.2s,
     transform 0.2s;
 }
 .gallery-page .obj-card:hover .obj-open .oo-arrow {
-  background: var(--green);
-  color: var(--black);
+  background: var(--black);
+  color: var(--green);
   transform: translateX(3px);
 }
 
 /* NOTE STRIP */
 .gallery-page .gal-note {
+  width: 100%;
   max-width: 1240px;
-  margin: 44px auto 0;
-  padding: 0 48px;
+  margin: 44px auto 12px;
+  padding: 0 18px;
 }
 .gallery-page .gal-note-inner {
   display: flex;
@@ -1068,7 +1074,10 @@
   z-index: 600;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: max(20px, env(safe-area-inset-top)) 20px
+    max(20px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   backdrop-filter: blur(6px);
 }
 .gallery-page .modal-overlay.open {
@@ -1080,6 +1089,9 @@
   padding: 44px;
   max-width: 460px;
   width: 100%;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   position: relative;
   animation: vFade 0.3s ease;
 }

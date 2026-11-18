@@ -1,22 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
-import { Inter, Montserrat } from "next/font/google";
-
 import { MainLayout } from "@/app/layouts/MainLayout";
 import "@/app/globals.css";
-
-const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin", "cyrillic"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
 
 export const viewport: Viewport = {
   themeColor: "#22C55E",
@@ -80,7 +66,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ru">
-      <body className={`${inter.variable} ${montserrat.variable}`}>
+      <body>
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

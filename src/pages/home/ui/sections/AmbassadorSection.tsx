@@ -7,8 +7,11 @@ export function AmbassadorSection() {
       <div className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 select-none font-heading text-[clamp(5rem,17vw,17rem)] font-black leading-none text-ink/[0.06]">
         СПАРТАК
       </div>
-      <Container className="relative grid items-center gap-12 md:grid-cols-[1.2fr_0.8fr]">
-        <div className="reveal">
+      <Container className="ambassador-layout relative grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-12">
+        <div className="ambassador-quote reveal relative">
+          <span aria-hidden="true" className="ambassador-quote-mark">
+            “
+          </span>
           <Typography as="p" variant="h2" className="max-w-3xl text-ink">
             Дом должен быть таким, чтобы в него хотелось возвращаться снова и
             снова - как на родной стадион.

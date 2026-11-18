@@ -26,7 +26,7 @@ export function HomeLeadModal({
 
   return (
     <div
-      className="home-modal fixed inset-0 z-[300] flex items-center justify-center overflow-y-auto bg-ink/75 p-4 backdrop-blur-sm"
+      className="home-modal fixed inset-0 z-[300] flex items-start justify-center overflow-y-auto overscroll-contain bg-ink/75 px-4 py-6 backdrop-blur-sm sm:items-center sm:py-8"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
@@ -37,7 +37,7 @@ export function HomeLeadModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="home-modal-title"
-        className="relative my-auto w-full max-w-xl rounded-2xl bg-white p-6 text-ink shadow-2xl md:p-9"
+        className="home-modal-panel relative my-auto w-full max-w-xl shrink-0 rounded-2xl bg-white p-6 text-ink shadow-2xl sm:p-8 md:p-9"
       >
         <button
           type="button"

@@ -1,6 +1,7 @@
 import { BASE_PRICE } from "../../model/options";
 import type { CalculatorRow } from "../../lib/calculator";
 import { formatMoney } from "../../lib/calculator";
+import { AnimatedMoney } from "./AnimatedMoney";
 
 interface CalculatorSummaryProps {
   total: number;
@@ -18,7 +19,9 @@ export function CalculatorSummary({
       <div className="summary">
         <div className="summary-head">
           <div className="sh-label">Итоговая стоимость</div>
-          <div className="summary-total">{formatMoney(total)}</div>
+          <div className="summary-total">
+            <AnimatedMoney value={total} />
+          </div>
         </div>
         <div className="summary-body">
           <div className="sum-row sum-base">

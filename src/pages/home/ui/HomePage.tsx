@@ -17,7 +17,6 @@ import {
   VacanciesSection,
 } from "./sections";
 import { HomeDialogs } from "./HomeDialogs";
-import { HomePageScripts } from "./HomePageScripts";
 import { HomePageEffects } from "./HomePageEffects";
 
 function PageEffects() {
@@ -64,7 +63,6 @@ export function HomePage() {
       </main>
       <HomeDialogs />
       <HomePageEffects />
-      <HomePageScripts />
     </>
   );
 }

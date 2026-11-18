@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     "Политика обработки персональных данных строительной компании «Зелёный ключ»: какие данные собирают формы сайта, зачем, куда передаются и как их удалить.",
   alternates: { canonical: "/privacy" },
+  robots: { index: false, follow: true },
 };
 
 export default function PrivacyRoute() {

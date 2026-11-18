@@ -132,7 +132,10 @@ export function LeadForm({
       return;
     }
 
-    const payload: Record<string, unknown> = {
+    const payload: Record<string, unknown> = {};
+    Object.assign(payload, extraData);
+
+    Object.assign(payload, {
       source,
       page: `${window.location.pathname}${window.location.search}`,
       utm: getUtm(),
@@ -142,7 +145,7 @@ export function LeadForm({
         Math.round(window.performance.now() - startedAt.current),
       ),
       consent,
-    };
+    });
 
     ["name", "phone", "comment", "address", "service", "website"].forEach(
       (field) => {
@@ -150,8 +153,6 @@ export function LeadForm({
         if (typeof value === "string") payload[field] = value.trim();
       },
     );
-
-    Object.assign(payload, extraData);
 
     setIsSubmitting(true);
     setStatus(null);

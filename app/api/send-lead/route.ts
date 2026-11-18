@@ -3,7 +3,7 @@ import { handleLeadRequest } from "@/features/lead/lib/handler";
 
 export const runtime = "nodejs";
 
-async function handle(request: Request) {
+export async function POST(request: Request) {
   try {
     const result = await handleLeadRequest(request);
 
@@ -37,14 +37,23 @@ async function handle(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
-  return handle(request);
+export async function GET() {
+  return NextResponse.json(
+    { ok: false, error: "method_not_allowed" },
+    {
+      status: 405,
+      headers: { Allow: "POST, OPTIONS", "Cache-Control": "no-store" },
+    },
+  );
 }
 
-export async function GET(request: Request) {
-  return handle(request);
-}
-
-export async function OPTIONS(request: Request) {
-  return handle(request);
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      Allow: "POST, OPTIONS",
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
 }

@@ -16,6 +16,10 @@ export function initTypewriter() {
   let isDeleting = false;
   let timeout = 0;
 
+  // Keep the same line box while the phrase is typed and erased.
+  element.style.minHeight = "1.7em";
+  element.style.display = "block";
+
   const type = () => {
     const phrase = TYPEWRITER_PHRASES[phraseIndex];
 

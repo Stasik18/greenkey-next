@@ -1,210 +1,56 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import { Container, Typography } from "@/shared/ui";
-
-import {
-  createHouseLayers,
-  easeOutBack,
-  STAGES,
-  SVG_NS,
-} from "../../lib/build-scene";
+import { STAGES } from "../../lib/build-scene";
 
 export function BuildSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [activeStage, setActiveStage] = useState(0);
-  const [is3dReady, setIs3dReady] = useState(false);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const svg = svgRef.current;
-    if (!section || !svg) return;
-
-    const layers = createHouseLayers(svg);
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const compactQuery = window.matchMedia("(max-width: 900px)");
-    let animationFrame = 0;
-    let currentStage = 0;
-    let ownsFallback = true;
-
-    const handle3dReady = () => {
-      ownsFallback = false;
-      setIs3dReady(true);
-    };
-
-    document.addEventListener("build:3d-ready", handle3dReady, { once: true });
-
-    if (motionQuery.matches || compactQuery.matches) {
-      layers.forEach((group) => {
-        group.setAttribute("transform", "translate(0 0)");
-        group.style.opacity = "1";
-      });
-      section.classList.add("is-static");
-
-      return () => {
-        document.removeEventListener("build:3d-ready", handle3dReady);
-        section.classList.remove("is-static");
-      };
-    }
-
-    const update = () => {
-      animationFrame = 0;
-      if (!ownsFallback) return;
-
-      const total = Math.max(section.offsetHeight - window.innerHeight, 1);
-      const progress = Math.min(
-        Math.max(-section.getBoundingClientRect().top / total, 0),
-        1,
-      );
-      const step = 1 / layers.length;
-
-      layers.forEach((group, index) => {
-        const localProgress = Math.min(
-          Math.max((progress - index * step) / step, 0),
-          1,
-        );
-        const eased =
-          localProgress <= 0
-            ? 0
-            : localProgress >= 1
-              ? 1
-              : easeOutBack(localProgress);
-
-        group.setAttribute(
-          "transform",
-          `translate(0 ${(-72 * (1 - eased)).toFixed(1)})`,
-        );
-        group.style.opacity =
-          localProgress <= 0 ? "0" : String(Math.min(localProgress * 2.5, 1));
-      });
-
-      const nextStage = Math.min(
-        Math.floor(progress * layers.length),
-        layers.length - 1,
-      );
-
-      if (nextStage !== currentStage) {
-        currentStage = nextStage;
-        setActiveStage(nextStage);
-      }
-    };
-
-    const handleScroll = () => {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame(update);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
-    update();
-
-    return () => {
-      ownsFallback = false;
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      document.removeEventListener("build:3d-ready", handle3dReady);
-      window.cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
-  const stage = STAGES[activeStage];
-
   return (
-    <section
-      ref={sectionRef}
-      id="build"
-      className={`build-section relative min-h-[360vh] bg-ink text-white ${is3dReady ? "has-3d" : ""}`}
-    >
-      <div className="build-sticky sticky top-0 flex min-h-screen items-center overflow-hidden py-12">
-        <Container className="build-inner grid items-center gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="build-left relative z-10">
-            <Typography
-              as="h2"
-              variant="eyebrow"
-              className="build-eyebrow text-brand-orange"
-            >
-              Как рождается ваш дом
-            </Typography>
+    <section id="build" className="build-section bg-ink text-white">
+      <Container className="grid items-center gap-10 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:py-32">
+        <div className="build-left">
+          <Typography as="h2" variant="eyebrow" className="text-brand-orange">
+            Как рождается ваш дом
+          </Typography>
 
-            <div className="build-anim mt-8 min-h-44" aria-live="polite">
-              <div
-                id="b-num"
-                className="font-heading text-5xl font-black text-brand-green"
-              >
-                {String(activeStage + 1).padStart(2, "0")}
-              </div>
-              <Typography as="h3" variant="h2" className="mt-3 text-white">
-                <span id="b-title">{stage.title}</span>
-              </Typography>
-              <p
-                id="b-desc"
-                className="mt-4 max-w-lg text-sm leading-relaxed text-white/65"
-              >
-                {stage.description}
-              </p>
-            </div>
-
-            <div
-              id="b-dots"
-              className="build-dots mt-8 flex gap-2"
-              aria-hidden="true"
-            >
-              {STAGES.map((item, index) => (
-                <i
-                  key={item.title}
-                  className={`h-1.5 flex-1 rounded-full ${index <= activeStage ? "act" : ""}`}
-                />
-              ))}
-            </div>
-
-            <ol className="build-list sr-only">
-              {STAGES.map((item) => (
-                <li key={item.title}>
-                  <b>{item.title}.</b> {item.description}
-                </li>
-              ))}
-            </ol>
-
-            <div className="build-cta mt-8 flex flex-wrap items-center gap-4">
-              <button
-                type="button"
-                data-modal-open="modal-call"
-                className="rounded-lg bg-brand-green px-6 py-3 font-semibold text-ink transition hover:bg-brand-green/90"
-              >
-                Рассчитать мой дом
-              </button>
-              <span className="text-xs text-white/45">
-                Выезд на замер бесплатно · фиксированная цена по договору
-              </span>
-              <button
-                type="button"
-                className="build-skip hidden items-center gap-2 text-xs font-bold uppercase tracking-wider text-white/60 hover:text-white"
-              >
-                Пропустить анимацию
-                <span aria-hidden="true" className="build-skip-arrow">
-                  ↓
+          <ol className="mt-8 space-y-5">
+            {STAGES.map((stage, index) => (
+              <li key={stage.title} className="flex gap-4">
+                <span className="font-heading text-2xl font-black text-brand-green">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-              </button>
-            </div>
-          </div>
+                <div>
+                  <Typography as="h3" variant="h3" className="text-white">
+                    {stage.title}
+                  </Typography>
+                  <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/60">
+                    {stage.description}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
 
-          <div className="build-right relative min-h-[300px] lg:min-h-[560px]">
-            <div className="build-scene absolute inset-0">
-              <svg
-                ref={svgRef}
-                viewBox="0 0 1000 780"
-                xmlns={SVG_NS}
-                className={`h-full w-full ${is3dReady ? "hidden" : ""}`}
-                aria-hidden="true"
-              />
-            </div>
+          <button
+            type="button"
+            data-modal-open="modal-call"
+            className="mt-9 rounded bg-brand-green px-7 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:-translate-y-0.5 hover:bg-brand-orange"
+          >
+            Рассчитать мой дом
+          </button>
+        </div>
+
+        <div
+          className="build-placeholder relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] lg:min-h-[520px]"
+          aria-label="Место для будущего слайдера этапов строительства"
+        >
+          <div className="build-placeholder-mark" aria-hidden="true">
+            <span />
+            <span />
+            <span />
           </div>
-        </Container>
-        <p className="build-hint pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/35">
-          Прокручивайте - дом строится
-        </p>
-      </div>
+          <p className="absolute bottom-7 left-7 right-7 text-center text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
+            Визуализация этапов строительства
+          </p>
+        </div>
+      </Container>
     </section>
   );
 }

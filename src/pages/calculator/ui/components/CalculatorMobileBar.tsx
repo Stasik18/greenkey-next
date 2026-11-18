@@ -1,4 +1,4 @@
-import { formatMoney } from "../../lib/calculator";
+import { AnimatedMoney } from "./AnimatedMoney";
 
 interface CalculatorMobileBarProps {
   total: number;
@@ -8,7 +8,9 @@ export function CalculatorMobileBar({ total }: CalculatorMobileBarProps) {
   return (
     <div className="mbar">
       <span>Итого</span>
-      <b>{formatMoney(total)}</b>
+      <b>
+        <AnimatedMoney value={total} />
+      </b>
       <button
         type="button"
         onClick={() =>

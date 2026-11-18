@@ -31,10 +31,10 @@ export function Footer({ className }: FooterProps) {
       <div
         className={clsx(
           "mx-auto grid w-full max-w-[1200px]",
-          "grid-cols-[minmax(0,1fr)_max-content_minmax(0,1fr)]",
-          "items-center gap-8",
-          "max-[900px]:grid-cols-1 max-[900px]:gap-5",
-          "max-[900px]:text-center",
+          "grid-cols-[150px_minmax(0,1fr)_170px]",
+          "items-center gap-7",
+          "max-[760px]:grid-cols-1 max-[760px]:gap-5",
+          "max-[760px]:text-center",
         )}
       >
         <div className="min-w-0">
@@ -50,9 +50,10 @@ export function Footer({ className }: FooterProps) {
         <nav aria-label="Навигация в подвале" className="min-w-0">
           <ul
             className={clsx(
-              "m-0 flex list-none flex-wrap justify-center gap-x-5 gap-y-1 p-0",
+              "m-0 flex list-none flex-wrap justify-center gap-x-5 gap-y-0 p-0",
               "max-[1100px]:gap-x-3",
-              "max-[900px]:gap-x-5",
+              "max-[900px]:gap-x-2",
+              "max-[760px]:gap-x-5",
             )}
           >
             {NAV_ITEMS.map(({ label, href }) => (
@@ -74,7 +75,7 @@ export function Footer({ className }: FooterProps) {
           </ul>
         </nav>
 
-        <div className="min-w-0 text-right max-[900px]:text-center">
+        <div className="min-w-0 text-right max-[760px]:text-center">
           <p className="text-[0.78rem] text-white/25">
             © 2011 СК «Зелёный ключ»
           </p>

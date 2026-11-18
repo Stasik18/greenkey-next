@@ -31,7 +31,7 @@ export function HeroSection() {
         aria-hidden="true"
       />
 
-      <Container className="relative z-10 py-28 md:py-36">
+      <Container className="hero-inner relative z-10 w-full py-28 md:py-36">
         <div className="mx-auto max-w-5xl text-center">
           <span className="inline-flex rounded-full border border-brand-green/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-green">
             Москва и Московская область
@@ -67,15 +67,15 @@ export function HeroSection() {
 
           <Typography
             id="typewriter"
-            className="mx-auto mt-7 min-h-7 max-w-2xl text-base text-white/70 md:text-lg"
+            className="hero-sub mx-auto mt-7 min-h-[1.7em] max-w-2xl text-base text-white/70 md:text-lg"
           >
             Каркасные дома под ключ, ремонт и отделка
           </Typography>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="hero-cta-row mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
               size="lg"
-              className="magnetic ripple"
+              className="hero-primary magnetic ripple min-h-[98px] min-w-[260px] rounded-[4px] px-10 font-heading text-sm font-extrabold uppercase tracking-wide text-ink"
               data-modal-open="modal-measure"
             >
               Бесплатный замер
@@ -83,9 +83,9 @@ export function HeroSection() {
 
             <LeadForm
               source="index-hero"
-              className="hero-form w-full max-w-xl rounded-xl border border-white/15 bg-black/25 p-3 text-left backdrop-blur-md"
+              className="hero-form w-full max-w-[430px] text-left"
             >
-              <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="hero-form-row flex flex-col gap-2 sm:flex-row">
                 <label className="sr-only" htmlFor="hero-phone">
                   Ваш телефон для обратного звонка
                 </label>
@@ -98,11 +98,11 @@ export function HeroSection() {
                   maxLength={24}
                   placeholder="+7 (903) 000-00-00"
                   required
-                  className="min-h-12 min-w-0 flex-1 rounded-lg border border-white/15 bg-white px-4 text-ink outline-none placeholder:text-muted focus:border-brand-green focus:ring-2 focus:ring-brand-green/30"
+                  className="min-h-12 min-w-0 flex-1 rounded border-2 border-white/30 bg-ink/40 px-[18px] text-white outline-none placeholder:text-white/45 transition focus:border-brand-green focus:bg-ink/60"
                 />
                 <button
                   type="submit"
-                  className="hero-form-btn ripple min-h-12 rounded-lg bg-brand-orange px-5 font-heading text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-orange/90"
+                  className="hero-form-btn ripple min-h-12 rounded bg-white px-[26px] font-heading text-[13px] font-extrabold uppercase tracking-wide text-ink transition hover:-translate-y-0.5 hover:bg-brand-green"
                 >
                   Перезвоните мне
                 </button>
@@ -128,12 +128,13 @@ export function HeroSection() {
             построенных домов
           </span>
         </div>
-        <a
-          href="#numbers"
-          className="scroll-hint absolute bottom-6 left-1/2 hidden -translate-x-1/2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45 transition hover:text-white md:block"
+        <div
+          aria-hidden="true"
+          className="scroll-hint pointer-events-none absolute bottom-7 left-0 right-0 hidden flex-col items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-white/35 md:flex"
         >
-          Прокрутите вниз
-        </a>
+          <span aria-hidden="true" className="scroll-hint-line" />
+          <span>Прокрутите вниз</span>
+        </div>
       </Container>
     </section>
   );

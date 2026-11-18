@@ -170,9 +170,7 @@ async function connectSecureSession(config: LeadConfig) {
   const greeting = await session.readResponse();
   expectCode(greeting, "220", "greeting");
 
-  const hello = await session.command(
-    `EHLO ${config.allowedHosts[0] ?? "localhost"}`,
-  );
+  const hello = await session.command(`EHLO greenkey.local`);
   expectCode(hello, "250", "EHLO");
 
   const startTls = await session.command("STARTTLS");
@@ -216,7 +214,10 @@ export async function sendLeadEmail(
     };
   }
 
-  if (!config.recipient.includes("@") || !config.sender.includes("@")) {
+  const isSafeEmail = (value: string) =>
+    /^[^\\s<>@\\r\\n]+@[^\\s<>@\\r\\n]+\\.[^\\s<>@\\r\\n]+$/.test(value);
+
+  if (!isSafeEmail(config.recipient) || !isSafeEmail(config.sender)) {
     return { ok: false, detail: "Invalid recipient or sender address" };
   }
 
@@ -231,9 +232,7 @@ export async function sendLeadEmail(
       expectCode(greeting, "220", "greeting");
     }
 
-    const hello = await session.command(
-      `EHLO ${config.allowedHosts[0] ?? "localhost"}`,
-    );
+    const hello = await session.command(`EHLO greenkey.local`);
     expectCode(hello, "250", "EHLO");
 
     const auth = await session.command("AUTH LOGIN");

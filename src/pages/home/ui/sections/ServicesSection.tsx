@@ -50,12 +50,14 @@ export function ServicesSection() {
           Всё необходимое для вашего объекта - в одном месте, с одной командой.
         </Typography>
 
-        <div className="services-grid mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="services-grid mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
           {services.map(([icon, title, description], index) => (
             <article
               key={title}
               data-tilt
-              className={`svc-card reveal rounded-2xl border border-border bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-brand-green hover:shadow-xl ${index === 0 || index === 5 ? "xl:col-span-2" : ""}`}
+              className={`svc-card reveal min-w-0 rounded-2xl border border-border bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-brand-green hover:shadow-xl ${
+                index === 0 || index === 5 ? "xl:col-span-2" : ""
+              }`}
             >
               <div
                 className={`svc-icon mb-6 grid size-12 place-items-center rounded-xl ${index >= 3 ? "bg-brand-orange text-white" : "bg-brand-green/15 text-ink"}`}
@@ -67,15 +69,21 @@ export function ServicesSection() {
               <button
                 type="button"
                 data-modal-open="modal-call"
-                className="svc-link mt-6 inline-flex items-center gap-2 text-sm font-bold text-ink underline decoration-brand-green decoration-2 underline-offset-4"
+                className="svc-link mt-6 inline-flex items-center gap-2 text-sm font-bold text-ink underline decoration-brand-green decoration-2 underline-offset-4 transition-colors duration-200 hover:text-brand-orange"
               >
-                Узнать подробнее <span aria-hidden="true">→</span>
+                Узнать подробнее{" "}
+                <span
+                  aria-hidden="true"
+                  className="svc-link-arrow transition-colors duration-200"
+                >
+                  →
+                </span>
               </button>
             </article>
           ))}
         </div>
 
-        <div className="design-calc mt-14 grid gap-8 rounded-2xl bg-ink p-7 text-white md:grid-cols-2 md:p-10">
+        <div className="design-calc grid rounded-2xl bg-ink text-white">
           <div>
             <Typography variant="eyebrow" className="text-brand-orange">
               Дизайн-проект

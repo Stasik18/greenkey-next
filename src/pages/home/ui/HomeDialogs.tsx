@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import {
   useClickOutside,
@@ -113,13 +114,14 @@ export function HomeDialogs() {
 
   if (!activeModal) return null;
 
-  return (
+  return createPortal(
     <div ref={modalRootRef}>
       <HomeLeadModal
         activeModal={activeModal}
         panelRef={panelRef}
         onClose={close}
       />
-    </div>
+    </div>,
+    document.body,
   );
 }

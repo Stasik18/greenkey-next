@@ -14,8 +14,8 @@ import {
   BUILD_TERMS,
   LAND_OPTIONS,
   buildLeadDetails,
-  formatMoney,
 } from "../../lib/calculator";
+import { AnimatedMoney } from "./AnimatedMoney";
 
 interface CalculatorLeadSectionProps {
   total: number;
@@ -85,7 +85,9 @@ export function CalculatorLeadSection({
       </p>
       <div className="lead-total">
         <span>Ваша сборка:</span>
-        <b>{formatMoney(total)}</b>
+        <b>
+          <AnimatedMoney value={total} />
+        </b>
       </div>
 
       <ChoiceChips
@@ -103,13 +105,31 @@ export function CalculatorLeadSection({
           value === "Да, участок есть" ? "Да, есть" : "Нет, в поиске"
         }
       />
-      <ChoiceChips
-        label="Куда отправить смету?"
-        values={["max", "telegram"] as const}
-        selected={channel}
-        onChange={onChannelChange}
-        getLabel={(value) => (value === "max" ? "MAX" : "Telegram")}
-      />
+      <span className="field-label">Куда отправить смету?</span>
+      <div className="chip-row" aria-label="Канал отправки сметы">
+        <button
+          type="button"
+          className={`chip${channel === "max" ? " selected" : ""}`}
+          aria-pressed={channel === "max"}
+          onClick={() => onChannelChange("max")}
+        >
+          <svg viewBox="0 0 24 24" fill="#7B61FF" aria-hidden="true">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-4 6h1.8l2.2 3.5L14.2 8H16v8h-1.7v-5.2L12 14.3l-2.3-3.5V16H8V8z" />
+          </svg>
+          MAX
+        </button>
+        <button
+          type="button"
+          className={`chip${channel === "telegram" ? " selected" : ""}`}
+          aria-pressed={channel === "telegram"}
+          onClick={() => onChannelChange("telegram")}
+        >
+          <svg viewBox="0 0 24 24" fill="#229ED9" aria-hidden="true">
+            <path d="M21.9 4.3l-3.3 15.6c-.2 1.1-.9 1.3-1.8.8l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.3-8.4c.4-.4-.1-.6-.6-.2L5.2 13.5l-4.9-1.5c-1.1-.3-1.1-1 .2-1.5l19.2-7.4c.9-.3 1.7.2 1.4 1.7z" />
+          </svg>
+          Telegram
+        </button>
+      </div>
 
       <LeadForm
         source="calculator"
@@ -174,7 +194,7 @@ export function CalculatorLeadSection({
           />
           <label htmlFor="lead-consent">
             Согласен на обработку персональных данных и принимаю{" "}
-            <Link href="/privacy" target="_blank">
+            <Link href="/privacy" target="_blank" rel="noopener noreferrer">
               политику конфиденциальности
             </Link>
             .
