@@ -1,7 +1,8 @@
-import Link from "next/link";
-import { SectionHeading } from "./SectionHeading";
+import type { ReactNode } from "react";
+import { Container, Icon, Typography } from "@/shared/ui";
+import { LeadForm } from "@/shared/ui/lead-form";
 
-const VACANCIES = [
+const vacancies = [
   [
     "Бригады каркасного домостроения",
     "Фундамент, каркас, кровля, тёплый контур. Объекты идут круглый год.",
@@ -26,113 +27,178 @@ const VACANCIES = [
 
 export function VacanciesSection() {
   return (
-    <section
-      id="vacancies"
-      className="bg-ink px-6 py-32 text-white max-sm:py-20"
-    >
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow="06 — Работа в команде"
-          title={
-            <>
-              Ищем тех,
-              <br />
-              кто строит
-            </>
-          }
-          description="Набираем бригады и специалистов на объекты в Москве и Московской области. Оставьте отклик — перезвоним, обсудим объём работ и условия."
-          dark
-        />
-        <div className="mt-12 grid grid-cols-2 gap-12 max-[800px]:grid-cols-1">
-          <ul className="space-y-6">
-            {VACANCIES.map(([title, text]) => (
-              <li key={title} className="flex gap-4">
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-green text-sm font-black text-ink">
-                  ✓
-                </span>
+    <section id="vacancies" className="bg-ink py-20 text-white md:py-28">
+      <Container>
+        <Typography variant="eyebrow" className="text-brand-orange">
+          06 - Работа в команде
+        </Typography>
+        <Typography as="h2" variant="h2" className="mt-4 text-white">
+          Ищем тех,
+          <br />
+          кто строит
+        </Typography>
+        <Typography className="mt-5 max-w-2xl text-white/55">
+          Набираем бригады и специалистов на объекты в Москве и Московской
+          области. Оставьте отклик - перезвоним, обсудим объём работ и условия.
+        </Typography>
+
+        <div className="vac-grid mt-12 grid gap-8 lg:grid-cols-[1fr_0.9fr]">
+          <div className="vac-list space-y-4">
+            {vacancies.map(([title, description]) => (
+              <div
+                key={title}
+                className="vac-item reveal flex gap-4 rounded-xl border border-white/10 bg-white/[0.035] p-5"
+              >
+                <Icon
+                  name="Check"
+                  size={21}
+                  className="mt-0.5 shrink-0 text-brand-green"
+                />
                 <div>
-                  <h3 className="font-heading font-extrabold">{title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-white/45">
-                    {text}
-                  </p>
+                  <Typography as="h3" variant="h4" className="text-white">
+                    {title}
+                  </Typography>
+                  <Typography variant="body-sm" className="mt-2 text-white/55">
+                    {description}
+                  </Typography>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
-          <div className="rounded-xl bg-white p-8 text-ink max-sm:p-5">
-            <h3 className="font-heading text-2xl font-black">
+          </div>
+
+          <div className="vac-card rounded-2xl bg-white p-6 text-ink md:p-8">
+            <Typography as="h3" variant="h3">
               Отклик на вакансию
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
+            </Typography>
+            <Typography className="mt-3 text-sm text-muted">
               Коротко напишите, что умеете и где работали. Перезвоним в рабочее
               время.
-            </p>
-            <form className="mt-6 space-y-4">
-              <label className="block text-sm font-semibold">
-                Имя
-                <input
-                  name="name"
-                  autoComplete="name"
-                  required
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal outline-none focus:border-brand-green"
-                  placeholder="Иван Иванов"
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Телефон
-                <input
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  required
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal outline-none focus:border-brand-green"
-                  placeholder="+7 (903) 000-00-00"
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Специальность
-                <select
-                  name="service"
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal"
-                >
+            </Typography>
+            <LeadForm
+              source="index-vacancy"
+              className="contact-form mt-6 space-y-4"
+            >
+              <div className="form-row grid gap-4 sm:grid-cols-2">
+                <FormField id="vac-name" label="Имя">
+                  <input
+                    id="vac-name"
+                    name="name"
+                    autoComplete="name"
+                    maxLength={80}
+                    placeholder="Иван Иванов"
+                    required
+                    className={inputClass}
+                  />
+                </FormField>
+                <FormField id="vac-phone" label="Телефон">
+                  <input
+                    id="vac-phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    maxLength={24}
+                    placeholder="+7 (903) 000-00-00"
+                    required
+                    className={inputClass}
+                  />
+                </FormField>
+              </div>
+              <FormField id="vac-service" label="Специальность">
+                <select id="vac-service" name="service" className={inputClass}>
                   <option value="">Выберите...</option>
-                  {VACANCIES.map(([title]) => (
-                    <option key={title}>{title}</option>
-                  ))}
+                  <option>Бригада каркасного домостроения</option>
+                  <option>Кровельщик</option>
+                  <option>Отделочник</option>
+                  <option>Инженерные системы</option>
+                  <option>Прораб / мастер участка</option>
                   <option>Другое</option>
                 </select>
-              </label>
-              <label className="block text-sm font-semibold">
-                Опыт работы
+              </FormField>
+              <FormField id="vac-comment" label="Опыт работы">
                 <textarea
+                  id="vac-comment"
                   name="comment"
+                  maxLength={2000}
                   rows={3}
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal outline-none focus:border-brand-green"
-                  placeholder="Сколько лет в профессии, какие объекты вели..."
+                  placeholder="Сколько лет в профессии, какие объекты вели, размер бригады"
+                  className={inputClass}
                 />
-              </label>
-              <label className="flex items-start gap-2 text-xs leading-relaxed text-muted">
-                <input
-                  type="checkbox"
-                  required
-                  className="mt-0.5 accent-brand-green"
-                />
-                Согласен на обработку персональных данных и принимаю{" "}
-                <Link href="/privacy" className="underline">
-                  политику конфиденциальности
-                </Link>
-                .
-              </label>
+              </FormField>
+              <Honeypot id="vac-website" />
+              <Consent id="vac-consent" />
               <button
-                type="button"
-                className="w-full rounded bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase text-ink"
+                type="submit"
+                className="form-submit w-full rounded-lg bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:bg-brand-green/90"
               >
                 Отправить отклик
               </button>
-            </form>
+            </LeadForm>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
+  );
+}
+
+const inputClass =
+  "mt-2 min-h-11 w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/20";
+
+function FormField({
+  id,
+  label,
+  children,
+}: {
+  id: string;
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="form-group">
+      <label htmlFor={id} className="block text-sm font-semibold">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+function Honeypot({ id }: { id: string }) {
+  return (
+    <div className="hp-field" aria-hidden="true">
+      <label htmlFor={id}>Не заполняйте это поле</label>
+      <input
+        id={id}
+        name="website"
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+      />
+    </div>
+  );
+}
+function Consent({ id }: { id: string }) {
+  return (
+    <div className="form-consent-check flex items-start gap-2 text-xs leading-relaxed text-muted">
+      <input
+        id={id}
+        name="consent"
+        type="checkbox"
+        value="1"
+        required
+        className="mt-0.5 accent-brand-green"
+      />
+      <label htmlFor={id}>
+        Согласен на обработку персональных данных и принимаю{" "}
+        <a
+          href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          политику конфиденциальности
+        </a>
+        .
+      </label>
+    </div>
   );
 }

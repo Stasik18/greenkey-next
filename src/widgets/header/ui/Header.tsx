@@ -4,6 +4,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 
 import {
   useClickOutside,
@@ -36,20 +37,26 @@ const subscribe = () => () => {};
 const getSnapshot = () => true;
 const getServerSnapshot = () => false;
 
-function isInternalAnchor(href: string) {
-  return href.startsWith("#");
+function resolveNavigationHref(href: string, pathname: string) {
+  if (!href.startsWith("#")) return href;
+
+  return pathname === "/" ? href : `/${href}`;
 }
 
 export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname() ?? "/";
 
   const menu = useDisclosure();
+  const isMenuOpen = menu.isOpen;
+  const closeMenu = menu.close;
   const isDesktop = useMediaQuery("(min-width: 1111px)");
 
   const burgerRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRootRef = useRef<HTMLDivElement>(null);
 
   const menuRef = useClickOutside<HTMLDivElement>(menu.close, {
-    isActive: menu.isOpen && !isDesktop,
+    isActive: isMenuOpen && !isDesktop,
   });
 
   const isClient = useSyncExternalStore(
@@ -58,8 +65,8 @@ export function Header({ className }: HeaderProps) {
     getServerSnapshot,
   );
 
-  useLockBodyScroll(menu.isOpen);
-  useKeyDown("Escape", menu.close, menu.isOpen);
+  useLockBodyScroll(isMenuOpen);
+  useKeyDown("Escape", menu.close, isMenuOpen);
 
   // Отслеживаем прокрутку страницы.
   useEffect(() => {
@@ -78,39 +85,97 @@ export function Header({ className }: HeaderProps) {
 
   // Закрываем мобильное меню при переходе на десктоп.
   useEffect(() => {
-    if (isDesktop && menu.isOpen) {
-      menu.close();
+    if (isDesktop && isMenuOpen) {
+      closeMenu();
     }
-  }, [isDesktop, menu.isOpen, menu.close]);
+  }, [isDesktop, isMenuOpen, closeMenu]);
 
-  // Управляем фокусом мобильного меню.
+  // Мобильное меню работает как модальный слой: фон становится inert,
+  // фокус остаётся внутри панели и возвращается на кнопку меню после закрытия.
   useEffect(() => {
-    if (!menu.isOpen || isDesktop) return;
+    if (!isMenuOpen || isDesktop) return;
 
-    const firstLink = menuRef.current?.querySelector<HTMLElement>("a");
+    const root = mobileMenuRootRef.current;
+    const panel = menuRef.current;
+    if (!root || !panel) return;
 
-    firstLink?.focus();
+    const previousFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    const burgerButton = burgerRef.current;
+    const inerted = Array.from(document.body.children)
+      .filter((element) => {
+        if (element === root) return false;
+        if (["SCRIPT", "STYLE", "LINK"].includes(element.tagName)) return false;
+        return !element.hasAttribute("inert");
+      })
+      .map((element) => element as HTMLElement);
+
+    inerted.forEach((element) => {
+      element.inert = true;
+    });
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+        (element) => element.offsetWidth || element.offsetHeight,
+      );
+
+    const frame = window.requestAnimationFrame(() => {
+      panel.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+    });
+
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+
+      const elements = focusables();
+      if (elements.length === 0) {
+        event.preventDefault();
+        panel.focus();
+        return;
+      }
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (!panel.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", trapFocus, true);
 
     return () => {
-      burgerRef.current?.focus();
+      window.cancelAnimationFrame(frame);
+      document.removeEventListener("keydown", trapFocus, true);
+      inerted.forEach((element) => {
+        element.inert = false;
+      });
+      if (previousFocus?.isConnected) previousFocus.focus();
+      else burgerButton?.focus();
     };
-  }, [menu.isOpen, isDesktop, menuRef]);
-
-  const closeMenu = () => {
-    menu.close();
-  };
+  }, [isMenuOpen, isDesktop, menuRef]);
 
   const mobileMenu = isClient
     ? createPortal(
         <div
+          ref={mobileMenuRootRef}
           className={clsx(
             "fixed inset-0 z-[200] bg-black/40",
             "transition-opacity duration-300",
-            menu.isOpen
+            isMenuOpen
               ? "visible opacity-100"
               : "invisible pointer-events-none opacity-0",
           )}
-          aria-hidden={!menu.isOpen}
+          aria-hidden={!isMenuOpen}
         >
           <div
             ref={menuRef}
@@ -118,12 +183,12 @@ export function Header({ className }: HeaderProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Мобильная навигация"
-            inert={!menu.isOpen}
+            inert={!isMenuOpen}
             className={clsx(
               "absolute inset-y-0 right-0 flex w-full max-w-md flex-col",
               "overflow-y-auto bg-white px-6 py-8 shadow-2xl",
               "transition-transform duration-300",
-              menu.isOpen ? "translate-x-0" : "translate-x-full",
+              isMenuOpen ? "translate-x-0" : "translate-x-full",
             )}
           >
             <div className="mb-12 flex items-center justify-between">
@@ -139,6 +204,7 @@ export function Header({ className }: HeaderProps) {
                 type="button"
                 onClick={closeMenu}
                 aria-label="Закрыть меню"
+                data-autofocus
                 className={clsx(
                   "flex size-11 items-center justify-center",
                   "rounded-full border border-border text-2xl",
@@ -153,29 +219,16 @@ export function Header({ className }: HeaderProps) {
               <ul className="flex flex-col">
                 {NAV_ITEMS.map((item) => (
                   <li key={item.href} className="border-b border-border">
-                    {isInternalAnchor(item.href) ? (
-                      <a
-                        href={item.href}
-                        onClick={closeMenu}
-                        className={clsx(
-                          "block py-4 font-heading text-lg font-bold",
-                          "transition-colors hover:text-brand-green",
-                        )}
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={closeMenu}
-                        className={clsx(
-                          "block py-4 font-heading text-lg font-bold",
-                          "transition-colors hover:text-brand-green",
-                        )}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
+                    <Link
+                      href={resolveNavigationHref(item.href, pathname)}
+                      onClick={closeMenu}
+                      className={clsx(
+                        "block py-4 font-heading text-lg font-bold",
+                        "transition-colors hover:text-brand-green",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -218,45 +271,24 @@ export function Header({ className }: HeaderProps) {
           <ul className="flex items-center gap-5 min-[1420px]:gap-7">
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
-                {isInternalAnchor(item.href) ? (
-                  <a
-                    href={item.href}
-                    className={clsx(
-                      "group relative whitespace-nowrap",
-                      "text-[0.78rem] font-bold uppercase tracking-wider",
-                      "transition-colors hover:text-brand-green",
-                    )}
-                  >
-                    {item.label}
+                <Link
+                  href={resolveNavigationHref(item.href, pathname)}
+                  className={clsx(
+                    "group relative whitespace-nowrap",
+                    "text-[0.78rem] font-bold uppercase tracking-wider",
+                    "transition-colors hover:text-brand-green",
+                  )}
+                >
+                  {item.label}
 
-                    <span
-                      className={clsx(
-                        "absolute -bottom-1 left-0 h-0.5 w-0",
-                        "bg-brand-green transition-all duration-300",
-                        "group-hover:w-full",
-                      )}
-                    />
-                  </a>
-                ) : (
-                  <Link
-                    href={item.href}
+                  <span
                     className={clsx(
-                      "group relative whitespace-nowrap",
-                      "text-[0.78rem] font-bold uppercase tracking-wider",
-                      "transition-colors hover:text-brand-green",
+                      "absolute -bottom-1 left-0 h-0.5 w-0",
+                      "bg-brand-green transition-all duration-300",
+                      "group-hover:w-full",
                     )}
-                  >
-                    {item.label}
-
-                    <span
-                      className={clsx(
-                        "absolute -bottom-1 left-0 h-0.5 w-0",
-                        "bg-brand-green transition-all duration-300",
-                        "group-hover:w-full",
-                      )}
-                    />
-                  </Link>
-                )}
+                  />
+                </Link>
               </li>
             ))}
           </ul>
@@ -280,8 +312,8 @@ export function Header({ className }: HeaderProps) {
             ref={burgerRef}
             type="button"
             onClick={menu.toggle}
-            aria-label={menu.isOpen ? "Закрыть меню" : "Открыть меню"}
-            aria-expanded={menu.isOpen}
+            aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+            aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
             className={clsx(
               "flex size-11 flex-col items-center justify-center gap-[6px]",
@@ -293,51 +325,26 @@ export function Header({ className }: HeaderProps) {
             <span
               className={clsx(
                 "h-0.5 w-6 bg-ink transition-transform duration-300",
-                menu.isOpen && "translate-y-2 rotate-45",
+                isMenuOpen && "translate-y-2 rotate-45",
               )}
             />
 
             <span
               className={clsx(
                 "h-0.5 w-6 bg-ink transition-opacity duration-300",
-                menu.isOpen && "opacity-0",
+                isMenuOpen && "opacity-0",
               )}
             />
 
             <span
               className={clsx(
                 "h-0.5 w-6 bg-ink transition-transform duration-300",
-                menu.isOpen && "-translate-y-2 -rotate-45",
+                isMenuOpen && "-translate-y-2 -rotate-45",
               )}
             />
           </button>
         </div>
       </header>
-
-      <a
-        href={`tel:${PHONE}`}
-        aria-label={`Позвонить ${PHONE_LABEL}`}
-        className={clsx(
-          "fixed bottom-6 right-6 z-[90]",
-          "flex size-14 items-center justify-center",
-          "rounded-full bg-brand-green text-xl shadow-lg",
-          "transition-colors hover:bg-brand-orange",
-          "min-[1290px]:hidden",
-        )}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="size-6"
-          aria-hidden="true"
-        >
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7A2 2 0 0 1 22 16.92z" />
-        </svg>
-      </a>
 
       {mobileMenu}
     </>

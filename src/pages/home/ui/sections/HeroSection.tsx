@@ -1,57 +1,167 @@
-import Link from "next/link";
+import { Button, Container, Typography } from "@/shared/ui";
+import { LeadForm } from "@/shared/ui/lead-form";
 
 export function HeroSection() {
   return (
     <section
       id="about"
-      className="relative flex min-h-[min(900px,100svh)] items-center justify-center overflow-hidden bg-ink px-6 py-24 text-center"
+      className="hero-stage relative isolate flex min-h-[min(900px,calc(100svh-5rem))] items-center overflow-hidden bg-ink text-white"
     >
-      <div
+      <div className="hero-bg absolute inset-0 -z-20 overflow-hidden">
+        <video
+          className="hero-bg-video absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          poster="/assets/house-01.webp"
+          data-poster="/assets/house-01.webp"
+          data-speed="0.6"
+          data-src="/assets/hero-bg.mp4"
+          data-src-mobile="/assets/hero-bg-mobile.mp4"
+          aria-hidden="true"
+        />
+        <div className="hero-overlay absolute inset-0 bg-gradient-to-b from-ink/45 via-ink/65 to-ink" />
+      </div>
+
+      <canvas
+        id="particles-canvas"
+        className="pointer-events-none absolute inset-0 -z-10 h-full w-full opacity-60"
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(26,26,26,.45),rgba(26,26,26,.78)_78%,#1a1a1a_100%),url('/assets/house-06.webp')] bg-cover bg-center"
       />
-      <div className="relative z-10 mx-auto w-full max-w-[1000px]">
-        <p className="mb-5 inline-flex rounded-full border border-brand-green px-[18px] py-[7px] text-xs font-bold uppercase tracking-[0.15em] text-brand-green">
-          Москва и Московская область
-        </p>
-        <h1 className="mb-6 font-heading text-[clamp(2.6rem,6vw,5.8rem)] font-black leading-[0.96] tracking-[-0.04em] text-white">
-          Строим
-          <br />
-          <span className="text-brand-green">дома,</span> в которых
-          <br />
-          хочется жить
-        </h1>
-        <p className="mx-auto mb-9 max-w-2xl text-[clamp(.95rem,2vw,1.1rem)] text-white/60">
-          Каркасные дома под ключ, ремонт и отделка. Полный цикл работ от
-          проекта до сдачи объекта.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-3.5">
-          <a
-            href="#contacts"
-            className="rounded bg-brand-green px-10 py-[17px] font-heading text-sm font-extrabold uppercase tracking-[0.05em] text-ink transition-transform hover:-translate-y-0.5"
+
+      <Container className="relative z-10 py-28 md:py-36">
+        <div className="mx-auto max-w-5xl text-center">
+          <span className="inline-flex rounded-full border border-brand-green/70 px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-brand-green">
+            Москва и Московская область
+          </span>
+
+          <Typography
+            as="h1"
+            variant="display"
+            className="hero-title mt-8 text-white"
           >
-            Бесплатный замер
-          </a>
-          <Link
-            href="/calculator"
-            className="rounded border-2 border-white/30 px-10 py-[15px] font-heading text-sm font-bold uppercase tracking-[0.05em] text-white transition-colors hover:border-brand-green hover:bg-brand-green/10"
+            <span className="block">
+              <span className="word" style={{ animationDelay: "0.5s" }}>
+                Строим
+              </span>
+            </span>
+            <span className="block">
+              <span
+                className="word accent text-brand-green"
+                style={{ animationDelay: "0.7s" }}
+              >
+                дома,
+              </span>{" "}
+              <span className="word" style={{ animationDelay: "0.85s" }}>
+                в которых
+              </span>
+            </span>
+            <span className="block">
+              <span className="word" style={{ animationDelay: "1s" }}>
+                хочется жить
+              </span>
+            </span>
+          </Typography>
+
+          <Typography
+            id="typewriter"
+            className="mx-auto mt-7 min-h-7 max-w-2xl text-base text-white/70 md:text-lg"
           >
-            Рассчитать стоимость
-          </Link>
+            Каркасные дома под ключ, ремонт и отделка
+          </Typography>
+
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button
+              size="lg"
+              className="magnetic ripple"
+              data-modal-open="modal-measure"
+            >
+              Бесплатный замер
+            </Button>
+
+            <LeadForm
+              source="index-hero"
+              className="hero-form w-full max-w-xl rounded-xl border border-white/15 bg-black/25 p-3 text-left backdrop-blur-md"
+            >
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <label className="sr-only" htmlFor="hero-phone">
+                  Ваш телефон для обратного звонка
+                </label>
+                <input
+                  id="hero-phone"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  maxLength={24}
+                  placeholder="+7 (903) 000-00-00"
+                  required
+                  className="min-h-12 min-w-0 flex-1 rounded-lg border border-white/15 bg-white px-4 text-ink outline-none placeholder:text-muted focus:border-brand-green focus:ring-2 focus:ring-brand-green/30"
+                />
+                <button
+                  type="submit"
+                  className="hero-form-btn ripple min-h-12 rounded-lg bg-brand-orange px-5 font-heading text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-brand-orange/90"
+                >
+                  Перезвоните мне
+                </button>
+              </div>
+              <div className="hp-field" aria-hidden="true">
+                <label htmlFor="hero-website">Не заполняйте это поле</label>
+                <input
+                  id="hero-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+              <Consent id="hero-consent" />
+            </LeadForm>
+          </div>
         </div>
-      </div>
-      <div className="absolute bottom-14 right-8 z-10 rounded-2xl bg-brand-green px-6 py-4 text-3xl font-black text-ink max-sm:bottom-5 max-sm:right-4">
-        100+
-        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-wider">
-          построенных домов
-        </span>
-      </div>
-      <a
-        href="#numbers-grid"
-        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-[11px] uppercase tracking-widest text-white/40"
-      >
-        Прокрутите вниз
-      </a>
+
+        <div className="hero-badge absolute bottom-8 right-6 hidden rounded-2xl bg-brand-green px-6 py-4 font-heading text-3xl font-black text-ink md:block lg:bottom-12 lg:right-12">
+          100+
+          <span className="mt-1 block text-[10px] font-bold uppercase tracking-wider">
+            построенных домов
+          </span>
+        </div>
+        <a
+          href="#numbers"
+          className="scroll-hint absolute bottom-6 left-1/2 hidden -translate-x-1/2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45 transition hover:text-white md:block"
+        >
+          Прокрутите вниз
+        </a>
+      </Container>
     </section>
+  );
+}
+
+function Consent({ id }: { id: string }) {
+  return (
+    <div className="form-consent-check mt-3 flex items-start gap-2 text-left text-[11px] leading-relaxed text-white/60">
+      <input
+        id={id}
+        name="consent"
+        type="checkbox"
+        value="1"
+        required
+        className="mt-0.5 accent-brand-green"
+      />
+      <label htmlFor={id}>
+        Согласен на обработку персональных данных и принимаю{" "}
+        <a
+          href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-white"
+        >
+          политику конфиденциальности
+        </a>
+        .
+      </label>
+    </div>
   );
 }

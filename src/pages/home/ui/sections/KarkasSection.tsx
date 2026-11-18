@@ -1,25 +1,30 @@
-import { ConstructionCalculatorSection } from "./ConstructionCalculatorSection";
-import { SectionHeading } from "./SectionHeading";
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { Container, Icon, Typography } from "@/shared/ui";
+import { PriceCalculator } from "../components/PriceCalculator";
 
-const PACKAGES = [
+const packages = [
   {
-    name: "Тёплый контур — пакет А",
+    label: "Тёплый контур - пакет А",
     title: "Что входит в тёплый контур",
-    text: "Железобетонные сваи, силовой каркас дома 200 мм, кровля из металлочерепицы, окна профиля 70 мм, входная дверь, фасад «имитация бруса», закладные для инженерных коммуникаций и ОСБ на полу.",
+    description:
+      "Сваи железобетонные · Силовой каркас дома 200 мм · Кровля металлочерепица · Окна профиль 70 мм · Входная дверь · Фасад имитация бруса · Закладные для инженерных коммуникаций · ОСБ на пол внутри",
   },
   {
-    name: "Под ключ — пакет Б",
+    label: "Под ключ - пакет Б",
     title: "Всё из пакета А плюс инженерные коммуникации",
-    text: "Водоснабжение, канализация, электричество, бойлер, котёл, радиаторы, септик и скважина на песок под ключ.",
+    description:
+      "Водоснабжение, канализация, электричество, бойлер, котёл, радиаторы, септик, скважина на песок под ключ",
   },
   {
-    name: "Благоустройство — пакет В",
+    label: "Благоустройство - пакет В",
     title: "Что входит в благоустройство",
-    text: "Забор, ворота, калитка, въездная группа, стоянка автомобиля, дорожки, озеленение территории и дренаж участка. Стоимость рассчитывается индивидуально.",
+    description:
+      "Забор, ворота, калитка, въездная группа, стоянка авто, дорожки, озеленение территории, дренаж участка - рассчитывается индивидуально",
   },
 ];
 
-const BENEFITS = [
+const benefits = [
   "Строительство за 3–6 месяцев",
   "Высокая энергоэффективность",
   "Любая планировка и дизайн",
@@ -30,10 +35,10 @@ const BENEFITS = [
 
 export function KarkasSection() {
   return (
-    <section id="karkas" className="px-6 py-32 max-sm:py-20">
-      <div className="mx-auto max-w-[1200px]">
+    <section id="karkas" className="py-20 md:py-28">
+      <Container>
         <SectionHeading
-          eyebrow="01 — Наше основное направление"
+          eyebrow="01 - Наше основное направление"
           title={
             <>
               Строительство
@@ -41,44 +46,97 @@ export function KarkasSection() {
               каркасных домов
             </>
           }
-          description="Быстро, тепло, надёжно. Строим каркасные дома под ключ в Москве и Московской области. Полный цикл — от проекта до сдачи объекта."
+          description="Быстро, тепло, надёжно. Строим каркасные дома под ключ в Москве и Московской области. Полный цикл - от проекта до сдачи объекта."
         />
-        <div className="mt-12 grid grid-cols-[1.1fr_.9fr] gap-12 max-[800px]:grid-cols-1">
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-8">
-            {PACKAGES.map((item) => (
-              <article key={item.name}>
-                <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-brand-green/10 px-4 py-2 text-xs font-bold text-ink">
-                  <span className="h-2 w-2 rounded-full bg-brand-green" />
-                  {item.name}
+            {packages.map((item) => (
+              <article key={item.label} className="reveal">
+                <span className="inline-flex items-center gap-2 rounded-full bg-brand-green px-4 py-2 text-sm font-bold text-ink">
+                  <Icon name="Check" size={16} />
+                  {item.label}
                 </span>
-                <h3 className="mb-2 font-heading text-xl font-extrabold">
+                <Typography variant="h3" className="mt-4">
                   {item.title}
-                </h3>
-                <p className="leading-relaxed text-muted">{item.text}</p>
+                </Typography>
+                <Typography className="mt-3 max-w-2xl text-muted">
+                  {item.description}
+                </Typography>
               </article>
             ))}
           </div>
-          <aside className="rounded-2xl bg-surface-muted p-9 max-sm:p-6">
-            <p className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
+
+          <aside className="reveal rounded-2xl bg-surface-muted p-7 md:p-9">
+            <Typography variant="eyebrow" className="text-brand-orange">
               Преимущества
-            </p>
-            <ul className="space-y-4">
-              {BENEFITS.map((benefit) => (
-                <li
-                  key={benefit}
-                  className="flex items-start gap-3 text-sm leading-relaxed"
-                >
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-green text-xs font-black">
-                    ✓
+            </Typography>
+            <ul className="mt-6 space-y-4">
+              {benefits.map((benefit) => (
+                <li key={benefit} className="flex items-start gap-3">
+                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-brand-green">
+                    <Icon name="Check" size={15} />
                   </span>
-                  {benefit}
+                  <Typography>{benefit}</Typography>
                 </li>
               ))}
             </ul>
           </aside>
         </div>
-        <ConstructionCalculatorSection />
-      </div>
+
+        <div className="mt-16">
+          <Typography variant="eyebrow" className="text-brand-orange">
+            Рассчитайте стоимость
+          </Typography>
+          <Typography as="h3" variant="h3" className="mt-3">
+            Калькулятор каркасного дома
+          </Typography>
+
+          <PriceCalculator kind="house" />
+
+          <Link
+            href="/calculator"
+            className="mt-5 flex items-center justify-between gap-5 rounded-xl bg-ink p-6 text-white transition-colors hover:bg-ink/90"
+          >
+            <span>
+              <strong className="block font-heading">
+                Подробный калькулятор комплектаций
+              </strong>
+              <span className="mt-1 block text-sm text-white/55">
+                Соберите дом по опциям - фундамент, отделка, терраса, забор,
+                участок - и узнайте точную стоимость
+              </span>
+            </span>
+            <span aria-hidden="true" className="text-3xl text-brand-green">
+              →
+            </span>
+          </Link>
+        </div>
+      </Container>
     </section>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: ReactNode;
+  description: string;
+}) {
+  return (
+    <header>
+      <Typography variant="eyebrow" className="mb-4 text-brand-orange">
+        {eyebrow}
+      </Typography>
+      <Typography as="h2" variant="h2">
+        {title}
+      </Typography>
+      <Typography className="mt-5 max-w-2xl text-muted">
+        {description}
+      </Typography>
+    </header>
   );
 }

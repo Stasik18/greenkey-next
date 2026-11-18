@@ -1,143 +1,104 @@
-import Link from "next/link";
-import { SectionHeading } from "./SectionHeading";
+import { Container, Icon, Typography } from "@/shared/ui";
+import { ContactsLeadForm } from "../components/ContactsLeadForm";
 
 export function ContactsSection() {
   return (
-    <section id="contacts" className="bg-surface-muted px-6 py-32 max-sm:py-20">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow="07 — Свяжитесь с нами"
-          title={
-            <>
-              Начните
-              <br />
-              сегодня
-            </>
-          }
-        />
-        <div className="mt-12 grid grid-cols-2 gap-14 max-[800px]:grid-cols-1">
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted">
+    <section id="contacts" className="bg-surface-muted py-20 md:py-28">
+      <Container>
+        <Typography variant="eyebrow" className="text-brand-orange">
+          07 - Свяжитесь с нами
+        </Typography>
+        <Typography as="h2" variant="h2" className="mt-4">
+          Начните
+          <br />
+          сегодня
+        </Typography>
+
+        <div className="mt-8">
+          <button
+            type="button"
+            data-modal-open="modal-measure"
+            className="rounded-lg border border-ink/20 px-5 py-3 text-sm font-bold text-ink transition hover:border-brand-green hover:bg-brand-green/10"
+          >
+            Бесплатный замер
+          </button>
+        </div>
+
+        <div className="contacts-grid mt-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="contact-info space-y-7">
+            <div className="contact-item">
+              <Typography variant="eyebrow" className="text-muted">
                 Телефон / MAX / Telegram
-              </h3>
+              </Typography>
               <a
                 href="tel:+79035120326"
-                className="font-heading text-2xl font-black"
+                className="contact-phone mt-2 block font-heading text-2xl font-black transition hover:text-brand-orange"
               >
                 +7 (903) 512-03-26
               </a>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="contact-messengers mt-4 flex flex-wrap gap-2">
                 <a
                   href="https://max.ru/79035120326"
                   target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-border bg-white px-4 py-2 text-sm"
+                  rel="noopener noreferrer"
+                  className="messenger-btn rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold hover:border-brand-green"
                 >
                   MAX
                 </a>
                 <a
                   href="https://t.me/+79035120326"
                   target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-border bg-white px-4 py-2 text-sm"
+                  rel="noopener noreferrer"
+                  className="messenger-btn rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold hover:border-brand-green"
                 >
                   Telegram
                 </a>
               </div>
               <p className="mt-2 text-xs text-muted">
-                Макс — руководитель проектов
+                Макс - руководитель проектов
               </p>
             </div>
-            <div>
-              <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-muted">
+
+            <div className="contact-item">
+              <Typography variant="eyebrow" className="text-muted">
                 Email
-              </h3>
-              <a href="mailto:dafo40@yandex.ru" className="font-semibold">
+              </Typography>
+              <a
+                href="mailto:dafo40@yandex.ru"
+                className="mt-2 block font-semibold"
+              >
                 dafo40@yandex.ru
               </a>
+              <a
+                href="mailto:dafo40@yandex.ru"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold underline decoration-brand-green decoration-2 underline-offset-4"
+              >
+                <Icon name="Mail" size={17} /> Написать письмо руководителю
+              </a>
             </div>
-            <div>
-              <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-muted">
+
+            <div className="contact-item">
+              <Typography variant="eyebrow" className="text-muted">
                 Режим работы
-              </h3>
-              <p>Ежедневно: 9:00–18:00</p>
+              </Typography>
+              <p className="mt-2">Ежедневно: 9:00–18:00</p>
             </div>
-            <div>
-              <h3 className="mb-2 text-xs font-bold uppercase tracking-widest text-muted">
+
+            <div className="contact-item">
+              <Typography variant="eyebrow" className="text-muted">
                 Регион работы
-              </h3>
-              <p>
+              </Typography>
+              <p className="mt-2 leading-relaxed">
                 Москва и Московская область
                 <br />
                 Бесплатный выезд на замер
               </p>
             </div>
           </div>
-          <form className="rounded-xl bg-white p-8 shadow-sm max-sm:p-5">
-            <h3 className="mb-6 font-heading text-2xl font-black">
-              Оставить заявку
-            </h3>
-            <div className="space-y-4">
-              <label className="block text-sm font-semibold">
-                Имя
-                <input
-                  name="name"
-                  autoComplete="name"
-                  required
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal outline-none focus:border-brand-green"
-                  placeholder="Иван Иванов"
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Телефон
-                <input
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  required
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal outline-none focus:border-brand-green"
-                  placeholder="+7 (903) 000-00-00"
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Тип услуги
-                <select
-                  name="service"
-                  className="mt-2 w-full rounded border border-border px-4 py-3 font-normal"
-                >
-                  <option value="">Выберите услугу...</option>
-                  <option>Строительство каркасного дома</option>
-                  <option>Ремонт и отделка</option>
-                  <option>Дизайн-проект</option>
-                  <option>Кадастровые работы</option>
-                  <option>Инженерные работы</option>
-                  <option>Хоумстейджинг</option>
-                  <option>Другое</option>
-                </select>
-              </label>
-              <label className="flex items-start gap-2 text-xs leading-relaxed text-muted">
-                <input
-                  type="checkbox"
-                  required
-                  className="mt-0.5 accent-brand-green"
-                />
-                Согласен на обработку персональных данных и принимаю{" "}
-                <Link href="/privacy" className="underline">
-                  политику конфиденциальности
-                </Link>
-                .
-              </label>
-              <button
-                type="button"
-                className="w-full rounded bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase text-ink"
-              >
-                Жду звонка
-              </button>
-            </div>
-          </form>
+
+          <ContactsLeadForm />
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

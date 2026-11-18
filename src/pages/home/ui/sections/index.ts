@@ -1,11 +1,13 @@
 export { HeroSection } from "./HeroSection";
-export { StatsSection } from "./StatsSection";
+export { NumbersSection } from "./NumbersSection";
+export { AmbassadorSection } from "./AmbassadorSection";
+export { MarqueeSection } from "./MarqueeSection";
 export { KarkasSection } from "./KarkasSection";
-export { ConstructionCalculatorSection } from "./ConstructionCalculatorSection";
 export { RepairSection } from "./RepairSection";
-export { Build3DSection } from "./Build3DSection";
+export { BuildSection } from "./BuildSection";
 export { ProcessSection } from "./ProcessSection";
 export { ServicesSection } from "./ServicesSection";
+export { PaymentSection } from "./PaymentSection";
 export { PartnersSection } from "./PartnersSection";
 export { GallerySection } from "./GallerySection";
 export { VacanciesSection } from "./VacanciesSection";

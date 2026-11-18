@@ -1,52 +1,49 @@
-import { SectionHeading } from "./SectionHeading";
+import { Container, Typography } from "@/shared/ui";
 
-const STEPS = [
-  [
-    "01",
-    "Заявка",
-    "Оставляете заявку или связываетесь с нами удобным способом.",
-  ],
-  [
-    "02",
-    "Замер и проект",
-    "Обсуждаем задачи, выезжаем на объект и готовим расчёт.",
-  ],
-  ["03", "Договор", "Согласовываем комплектацию, сроки и фиксируем стоимость."],
-  ["04", "Строительство", "Выполняем работы и контролируем каждый этап."],
-  ["05", "Сдача объекта", "Принимаете готовый дом и получаете гарантию."],
+const steps = [
+  ["Бесплатный замер", "Выезжаем на объект, оцениваем все нюансы."],
+  ["Составление сметы", "Детальная смета с материалами и работами."],
+  ["Подписание договора", "Фиксированная цена, сроки и гарантии."],
+  ["Строительство", "Работаем в срок, контроль качества."],
+  ["Сдача объекта", "Акт приёмки и ключи в ваших руках."],
 ];
 
 export function ProcessSection() {
   return (
-    <section id="process" className="px-6 py-32 max-sm:py-20">
-      <div className="mx-auto max-w-[1200px]">
-        <SectionHeading
-          eyebrow="03 — Понятный процесс"
-          title={
-            <>
-              От заявки до
-              <br />
-              готового дома
-            </>
-          }
-        />
-        <div className="mt-14 grid grid-cols-5 gap-5 max-[900px]:grid-cols-2 max-sm:grid-cols-1">
-          {STEPS.map(([number, title, text]) => (
-            <article
-              key={number}
-              className="border-t-2 border-brand-green pt-5"
-            >
-              <p className="font-heading text-4xl font-black text-brand-green">
-                {number}
-              </p>
-              <h3 className="mt-5 font-heading text-lg font-extrabold">
-                {title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{text}</p>
-            </article>
+    <section id="process" className="py-20 md:py-28">
+      <Container>
+        <Typography variant="eyebrow" className="text-brand-orange">
+          Как мы работаем
+        </Typography>
+        <Typography as="h2" variant="h2" className="mt-4">
+          Прозрачный
+          <br />
+          процесс
+        </Typography>
+        <Typography className="mt-5 max-w-2xl text-muted">
+          Каждый шаг задокументирован. Вы всегда знаете, что происходит на вашем
+          объекте.
+        </Typography>
+        <ol
+          id="process-steps"
+          className="process-steps relative mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-5"
+        >
+          <div className="process-line absolute left-0 right-0 top-7 hidden h-px bg-border lg:block">
+            <div className="process-line-fill h-full w-0 bg-brand-green" />
+          </div>
+          {steps.map(([title, description], index) => (
+            <li key={title} className="process-step relative z-10">
+              <div className="step-dot mb-5 grid size-14 place-items-center rounded-full border-2 border-brand-green bg-white font-heading text-xl font-bold text-ink">
+                {index + 1}
+              </div>
+              <Typography variant="h4">{title}</Typography>
+              <Typography variant="body-sm" className="mt-2 text-muted">
+                {description}
+              </Typography>
+            </li>
           ))}
-        </div>
-      </div>
+        </ol>
+      </Container>
     </section>
   );
 }

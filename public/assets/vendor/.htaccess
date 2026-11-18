@@ -1,0 +1,8 @@
+# Сторонние библиотеки версионируются вручную вместе с содержимым папки:
+# файл здесь не меняется без смены версии пакета, поэтому его можно кэшировать
+# надолго. Корневой .htaccess отдаёт остальные .js без кэша.
+<IfModule mod_headers.c>
+  <FilesMatch "\.js$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
