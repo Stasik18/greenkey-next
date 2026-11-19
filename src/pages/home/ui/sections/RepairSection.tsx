@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Container, Typography } from "@/shared/ui";
+import { Button, Container, Typography } from "@/shared/ui";
 import { PriceCalculator } from "../components/PriceCalculator";
 
 const packages = [
@@ -54,7 +54,8 @@ export function RepairSection() {
 
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {packages.map((item) => (
-            <button
+            <Button
+              unstyled
               key={item.id}
               type="button"
               aria-pressed={selectedPackage === item.id}
@@ -77,7 +78,7 @@ export function RepairSection() {
               <Typography variant="h3" className="mt-6">
                 {item.price}
               </Typography>
-            </button>
+            </Button>
           ))}
         </div>
 

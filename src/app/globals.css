@@ -123,36 +123,40 @@
   }
 }
 
-/* Shared consent control used by every lead form across the site. */
+/* Shared consent control. Supports both the UI Kit Checkbox (input + span)
+   and the legacy Hero consent markup (input + label). */
 .form-consent-check {
-  display: grid !important;
-  grid-template-columns: 16px minmax(0, 1fr);
-  align-items: start;
-  column-gap: 10px;
-  row-gap: 0;
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
   width: 100%;
+  min-width: 0;
   margin: 16px 0 18px !important;
   font-size: 12px;
   line-height: 1.45;
   text-align: left;
 }
-.form-consent-check input[type="checkbox"] {
+.form-consent-check > input[type="checkbox"] {
   display: block;
+  flex: 0 0 16px;
   width: 16px;
-  height: 16px;
   min-width: 16px;
+  height: 16px;
   margin: 2px 0 0 !important;
   padding: 0;
   accent-color: var(--color-brand-green);
   cursor: pointer;
 }
-.form-consent-check label {
+.form-consent-check > span,
+.form-consent-check > label {
   display: block;
+  flex: 1 1 auto;
   min-width: 0;
+  width: auto;
   margin: 0;
   line-height: 1.45;
+  overflow-wrap: break-word;
   cursor: pointer;
-  overflow-wrap: anywhere;
 }
 .form-consent-check a {
   text-decoration: underline;
@@ -163,7 +167,22 @@
   outline: 2px solid var(--color-brand-green);
   outline-offset: 3px;
 }
+.form-consent-check input[type="checkbox"][aria-invalid="true"] {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
 
+/* Invalid controls are visibly marked after a form validation attempt. */
+[data-lead-form] input[aria-invalid="true"],
+[data-lead-form] textarea[aria-invalid="true"],
+[data-lead-form] select[aria-invalid="true"] {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 1px #dc2626;
+}
+.form-consent-check:has(input[type="checkbox"][aria-invalid="true"]) > span,
+.form-consent-check:has(input[type="checkbox"][aria-invalid="true"]) > label {
+  color: #b91c1c;
+}
 /* Shared modal ergonomics: content stays reachable on short viewports. */
 .home-modal {
   padding-top: max(24px, env(safe-area-inset-top));

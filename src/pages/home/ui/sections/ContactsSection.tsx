@@ -1,4 +1,4 @@
-import { Container, Icon, Typography } from "@/shared/ui";
+import { Button, Container, Icon, Typography } from "@/shared/ui";
 import { ContactsLeadForm } from "../components/ContactsLeadForm";
 
 export function ContactsSection() {
@@ -15,13 +15,14 @@ export function ContactsSection() {
         </Typography>
 
         <div className="mt-10">
-          <button
+          <Button
+            unstyled
             type="button"
             data-modal-open="modal-measure"
             className="min-h-14 min-w-[260px] rounded-md border-2 border-ink/20 px-7 py-4 text-sm font-bold uppercase tracking-wide text-ink transition hover:border-brand-green hover:bg-brand-green/10"
           >
             Бесплатный замер
-          </button>
+          </Button>
         </div>
 
         <div className="contacts-grid mt-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">

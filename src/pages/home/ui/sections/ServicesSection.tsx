@@ -1,4 +1,4 @@
-import { Container, Icon, Typography } from "@/shared/ui";
+import { Button, Container, Icon, Typography } from "@/shared/ui";
 import { PriceCalculator } from "../components/PriceCalculator";
 
 const services = [
@@ -66,7 +66,8 @@ export function ServicesSection() {
               </div>
               <Typography variant="h3">{title}</Typography>
               <Typography className="mt-3 text-muted">{description}</Typography>
-              <button
+              <Button
+                unstyled
                 type="button"
                 data-modal-open="modal-call"
                 className="svc-link mt-6 inline-flex items-center gap-2 text-sm font-bold text-ink underline decoration-brand-green decoration-2 underline-offset-4 transition-colors duration-200 hover:text-brand-orange"
@@ -78,7 +79,7 @@ export function ServicesSection() {
                 >
                   →
                 </span>
-              </button>
+              </Button>
             </article>
           ))}
         </div>

@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import Image from "next/image";
 
 import { HOUSES, type House } from "../../model/gallery-data";
@@ -18,7 +19,8 @@ export function GalleryHouseGrid({ openViewer }: GalleryHouseGridProps) {
           const built = house.status !== "progress";
 
           return (
-            <button
+            <Button
+              unstyled
               type="button"
               className="obj-card"
               key={house.id}
@@ -56,7 +58,7 @@ export function GalleryHouseGrid({ openViewer }: GalleryHouseGridProps) {
                   Смотреть галерею стройки <span className="oo-arrow">→</span>
                 </div>
               </div>
-            </button>
+            </Button>
           );
         })}
       </div>

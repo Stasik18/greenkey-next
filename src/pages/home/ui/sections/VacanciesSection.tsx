@@ -1,5 +1,14 @@
 import type { ReactNode } from "react";
-import { Container, Icon, Typography } from "@/shared/ui";
+import {
+  Button,
+  Checkbox,
+  Container,
+  Icon,
+  Input,
+  Select,
+  Textarea,
+  Typography,
+} from "@/shared/ui";
 import { LeadForm } from "@/shared/ui/lead-form";
 
 const vacancies = [
@@ -80,7 +89,8 @@ export function VacanciesSection() {
             >
               <div className="form-row grid gap-4 sm:grid-cols-2">
                 <FormField id="vac-name" label="Имя">
-                  <input
+                  <Input
+                    unstyled
                     id="vac-name"
                     name="name"
                     autoComplete="name"
@@ -91,7 +101,8 @@ export function VacanciesSection() {
                   />
                 </FormField>
                 <FormField id="vac-phone" label="Телефон">
-                  <input
+                  <Input
+                    unstyled
                     id="vac-phone"
                     name="phone"
                     type="tel"
@@ -105,7 +116,12 @@ export function VacanciesSection() {
                 </FormField>
               </div>
               <FormField id="vac-service" label="Специальность">
-                <select id="vac-service" name="service" className={inputClass}>
+                <Select
+                  unstyled
+                  id="vac-service"
+                  name="service"
+                  className={inputClass}
+                >
                   <option value="">Выберите...</option>
                   <option>Бригада каркасного домостроения</option>
                   <option>Кровельщик</option>
@@ -113,10 +129,11 @@ export function VacanciesSection() {
                   <option>Инженерные системы</option>
                   <option>Прораб / мастер участка</option>
                   <option>Другое</option>
-                </select>
+                </Select>
               </FormField>
               <FormField id="vac-comment" label="Опыт работы">
-                <textarea
+                <Textarea
+                  unstyled
                   id="vac-comment"
                   name="comment"
                   maxLength={2000}
@@ -127,12 +144,13 @@ export function VacanciesSection() {
               </FormField>
               <Honeypot id="vac-website" />
               <Consent id="vac-consent" />
-              <button
+              <Button
+                unstyled
                 type="submit"
                 className="form-submit w-full rounded-lg bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:bg-brand-green/90"
               >
                 Отправить отклик
-              </button>
+              </Button>
             </LeadForm>
           </div>
         </div>
@@ -178,27 +196,23 @@ function Honeypot({ id }: { id: string }) {
 }
 function Consent({ id }: { id: string }) {
   return (
-    <div className="form-consent-check flex items-start gap-2 text-xs leading-relaxed text-muted">
-      <input
-        id={id}
-        name="consent"
-        type="checkbox"
-        value="1"
-        required
-        className="mt-0.5 accent-brand-green"
-      />
-      <label htmlFor={id}>
-        Согласен на обработку персональных данных и принимаю{" "}
-        <a
-          href="/privacy"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          политику конфиденциальности
-        </a>
-        .
-      </label>
-    </div>
+    <Checkbox
+      id={id}
+      name="consent"
+      value="1"
+      required
+      className="form-consent-check flex items-start gap-2 text-xs leading-relaxed text-muted"
+    >
+      Согласен на обработку персональных данных и принимаю{" "}
+      <a
+        href="/privacy"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline"
+      >
+        политику конфиденциальности
+      </a>
+      .
+    </Checkbox>
   );
 }

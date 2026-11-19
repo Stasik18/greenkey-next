@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/shared/ui";
+
 import Link from "next/link";
 import clsx from "clsx";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -200,7 +202,8 @@ export function Header({ className }: HeaderProps) {
                 Зелёный <span className="text-brand-green">ключ</span>
               </Link>
 
-              <button
+              <Button
+                unstyled
                 type="button"
                 onClick={closeMenu}
                 aria-label="Закрыть меню"
@@ -212,7 +215,7 @@ export function Header({ className }: HeaderProps) {
                 )}
               >
                 &times;
-              </button>
+              </Button>
             </div>
 
             <nav aria-label="Мобильная навигация">
@@ -308,7 +311,8 @@ export function Header({ className }: HeaderProps) {
             {PHONE_LABEL}
           </a>
 
-          <button
+          <Button
+            unstyled
             ref={burgerRef}
             type="button"
             onClick={menu.toggle}
@@ -342,7 +346,7 @@ export function Header({ className }: HeaderProps) {
                 isMenuOpen && "-translate-y-2 -rotate-45",
               )}
             />
-          </button>
+          </Button>
         </div>
       </header>
 

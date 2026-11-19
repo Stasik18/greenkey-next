@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import type { PackageOption } from "../../model/price-calculator";
 
 interface PriceCalculatorTabsProps {
@@ -16,7 +17,8 @@ export function PriceCalculatorTabs({
   return (
     <div className="calc-tabs grid grid-cols-1 border-b border-border sm:grid-cols-3">
       {options.map((option) => (
-        <button
+        <Button
+          unstyled
           key={option.id}
           type="button"
           className={`calc-tab ${activeId === option.id ? "active" : ""}`}
@@ -25,7 +27,7 @@ export function PriceCalculatorTabs({
         >
           <span>{option.label}</span>
           <small>{option.priceLabel}</small>
-        </button>
+        </Button>
       ))}
     </div>
   );

@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import type { Dispatch, RefObject, SetStateAction, TouchEvent } from "react";
 import Image from "next/image";
 
@@ -38,7 +39,8 @@ export function PhotoLightbox({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <button
+      <Button
+        unstyled
         type="button"
         className="lb-close"
         aria-label="Закрыть фотографию"
@@ -46,10 +48,11 @@ export function PhotoLightbox({
         onClick={closeLightbox}
       >
         ×
-      </button>
+      </Button>
       {lightboxPhotos.length > 1 && (
         <>
-          <button
+          <Button
+            unstyled
             type="button"
             className="lb-nav lb-prev"
             aria-label="Предыдущее фото"
@@ -61,8 +64,9 @@ export function PhotoLightbox({
             }
           >
             ‹
-          </button>
-          <button
+          </Button>
+          <Button
+            unstyled
             type="button"
             className="lb-nav lb-next"
             aria-label="Следующее фото"
@@ -71,7 +75,7 @@ export function PhotoLightbox({
             }
           >
             ›
-          </button>
+          </Button>
           <span className="lb-counter" aria-live="polite">
             {photoIndex + 1} / {lightboxPhotos.length}
           </span>

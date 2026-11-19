@@ -1,4 +1,4 @@
-import { Container, Typography } from "@/shared/ui";
+import { Button, Container, Typography } from "@/shared/ui";
 import { STAGES } from "../../lib/build-scene";
 
 export function BuildSection() {
@@ -28,13 +28,14 @@ export function BuildSection() {
             ))}
           </ol>
 
-          <button
+          <Button
+            unstyled
             type="button"
             data-modal-open="modal-call"
             className="mt-9 rounded bg-brand-green px-7 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:-translate-y-0.5 hover:bg-brand-orange"
           >
             Рассчитать мой дом
-          </button>
+          </Button>
         </div>
 
         <div

@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import type { CalculatorOption } from "../../model/types";
 import { formatMoney } from "../../lib/calculator";
 
@@ -9,7 +10,8 @@ interface OptionCardProps {
 
 export function OptionCard({ option, selected, onSelect }: OptionCardProps) {
   return (
-    <button
+    <Button
+      unstyled
       type="button"
       className={`opt-card${selected ? " selected" : ""}`}
       aria-pressed={selected}
@@ -23,6 +25,6 @@ export function OptionCard({ option, selected, onSelect }: OptionCardProps) {
       <span className={`oc-price${option.p === 0 ? " zero" : ""}`}>
         {option.p === 0 ? "Включено" : `+ ${formatMoney(option.p)}`}
       </span>
-    </button>
+    </Button>
   );
 }

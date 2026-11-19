@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import Link from "next/link";
+import { Button, Checkbox, Input } from "@/shared/ui";
 import { LeadForm } from "@/shared/ui/lead-form";
 
 interface GalleryCallModalProps {
@@ -27,7 +28,8 @@ export function GalleryCallModal({
       }}
     >
       <div className="modal">
-        <button
+        <Button
+          unstyled
           type="button"
           className="modal-close"
           aria-label="Закрыть"
@@ -35,7 +37,7 @@ export function GalleryCallModal({
           onClick={closeCall}
         >
           ×
-        </button>
+        </Button>
         <h2 id="modal-call-title">{callTitle}</h2>
         <p>
           Оставьте контакты - перезвоним, ответим на вопросы и рассчитаем
@@ -49,7 +51,8 @@ export function GalleryCallModal({
         >
           <div className="form-group">
             <label htmlFor="gallery-call-name">Ваше имя</label>
-            <input
+            <Input
+              unstyled
               type="text"
               id="gallery-call-name"
               name="name"
@@ -61,7 +64,8 @@ export function GalleryCallModal({
           </div>
           <div className="form-group">
             <label htmlFor="gallery-call-phone">Телефон</label>
-            <input
+            <Input
+              unstyled
               type="tel"
               id="gallery-call-phone"
               name="phone"
@@ -75,7 +79,8 @@ export function GalleryCallModal({
           <input type="hidden" name="comment" value={callContext} />
           <div className="hp-field" aria-hidden="true">
             <label htmlFor="gallery-call-website">Не заполняйте это поле</label>
-            <input
+            <Input
+              unstyled
               type="text"
               id="gallery-call-website"
               name="website"
@@ -83,25 +88,22 @@ export function GalleryCallModal({
               autoComplete="off"
             />
           </div>
-          <div className="form-consent-check">
-            <input
-              type="checkbox"
-              id="gallery-call-consent"
-              name="consent"
-              value="1"
-              required
-            />
-            <label htmlFor="gallery-call-consent">
-              Согласен на обработку персональных данных и принимаю{" "}
-              <Link href="/privacy" target="_blank" rel="noopener noreferrer">
-                политику конфиденциальности
-              </Link>
-              .
-            </label>
-          </div>
-          <button type="submit" className="form-submit">
+          <Checkbox
+            id="gallery-call-consent"
+            name="consent"
+            value="1"
+            required
+            className="form-consent-check"
+          >
+            Согласен на обработку персональных данных и принимаю{" "}
+            <Link href="/privacy" target="_blank" rel="noopener noreferrer">
+              политику конфиденциальности
+            </Link>
+            .
+          </Checkbox>
+          <Button unstyled type="submit" className="form-submit">
             Жду звонка
-          </button>
+          </Button>
         </LeadForm>
       </div>
     </div>

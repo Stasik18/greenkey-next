@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { Button, Checkbox, Input, Select } from "@/shared/ui";
 import { LeadForm } from "@/shared/ui/lead-form";
 
 const serviceOptions = [
@@ -28,27 +29,30 @@ export function ContactsLeadForm() {
       className="contact-form rounded-2xl bg-white p-6 shadow-sm md:p-8"
     >
       <div className="form-tabs mb-7 grid grid-cols-2 gap-2 rounded-lg bg-surface-muted p-1">
-        <button
+        <Button
+          unstyled
           type="button"
           className={`form-tab rounded-md px-3 py-3 text-sm font-bold ${!isMeasure ? "active" : ""}`}
           aria-pressed={!isMeasure}
           onClick={() => setFormType("callback")}
         >
           Обратный звонок
-        </button>
-        <button
+        </Button>
+        <Button
+          unstyled
           type="button"
           className={`form-tab rounded-md px-3 py-3 text-sm font-bold ${isMeasure ? "active" : ""}`}
           aria-pressed={isMeasure}
           onClick={() => setFormType("measure")}
         >
           Бесплатный замер
-        </button>
+        </Button>
       </div>
 
       <div className="form-row grid gap-4 sm:grid-cols-2">
         <FormField id="cf-name" label="Имя">
-          <input
+          <Input
+            unstyled
             id="cf-name"
             name="name"
             autoComplete="name"
@@ -59,7 +63,8 @@ export function ContactsLeadForm() {
           />
         </FormField>
         <FormField id="cf-phone" label="Телефон">
-          <input
+          <Input
+            unstyled
             id="cf-phone"
             name="phone"
             type="tel"
@@ -77,12 +82,12 @@ export function ContactsLeadForm() {
         <label htmlFor="cf-service" className="block text-sm font-semibold">
           Тип услуги
         </label>
-        <select id="cf-service" name="service" className={inputClass}>
+        <Select unstyled id="cf-service" name="service" className={inputClass}>
           <option value="">Выберите услугу...</option>
           {serviceOptions.map((service) => (
             <option key={service}>{service}</option>
           ))}
-        </select>
+        </Select>
       </div>
 
       {isMeasure && (
@@ -90,7 +95,8 @@ export function ContactsLeadForm() {
           <label htmlFor="cf-addr" className="block text-sm font-semibold">
             Адрес объекта
           </label>
-          <input
+          <Input
+            unstyled
             id="cf-addr"
             name="address"
             autoComplete="street-address"
@@ -104,12 +110,13 @@ export function ContactsLeadForm() {
       <Honeypot id="cf-website" />
       <Consent id="cf-consent" />
 
-      <button
+      <Button
+        unstyled
         type="submit"
         className="form-submit mt-6 w-full rounded-lg bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:bg-brand-green/90"
       >
         {isMeasure ? "Записаться на замер" : "Жду звонка"}
-      </button>
+      </Button>
     </LeadForm>
   );
 }
@@ -150,27 +157,23 @@ function Honeypot({ id }: { id: string }) {
 
 function Consent({ id }: { id: string }) {
   return (
-    <div className="form-consent-check mt-5 flex items-start gap-2 text-xs leading-relaxed text-muted">
-      <input
-        id={id}
-        name="consent"
-        type="checkbox"
-        value="1"
-        required
-        className="mt-0.5 accent-brand-green"
-      />
-      <label htmlFor={id}>
-        Согласен на обработку персональных данных и принимаю{" "}
-        <Link
-          href="/privacy"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          политику конфиденциальности
-        </Link>
-        .
-      </label>
-    </div>
+    <Checkbox
+      id={id}
+      name="consent"
+      value="1"
+      required
+      className="form-consent-check mt-5 flex items-start gap-2 text-xs leading-relaxed text-muted"
+    >
+      Согласен на обработку персональных данных и принимаю{" "}
+      <Link
+        href="/privacy"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline"
+      >
+        политику конфиденциальности
+      </Link>
+      .
+    </Checkbox>
   );
 }

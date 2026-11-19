@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import { AnimatedMoney } from "./AnimatedMoney";
 
 interface CalculatorMobileBarProps {
@@ -11,7 +12,8 @@ export function CalculatorMobileBar({ total }: CalculatorMobileBarProps) {
       <b>
         <AnimatedMoney value={total} />
       </b>
-      <button
+      <Button
+        unstyled
         type="button"
         onClick={() =>
           document
@@ -20,7 +22,7 @@ export function CalculatorMobileBar({ total }: CalculatorMobileBarProps) {
         }
       >
         Оставить заявку
-      </button>
+      </Button>
     </div>
   );
 }

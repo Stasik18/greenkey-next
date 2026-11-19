@@ -100,12 +100,13 @@ export function HeroSection() {
                   required
                   className="min-h-12 min-w-0 flex-1 rounded border-2 border-white/30 bg-ink/40 px-[18px] text-white outline-none placeholder:text-white/45 transition focus:border-brand-green focus:bg-ink/60"
                 />
-                <button
+                <Button
+                  unstyled
                   type="submit"
                   className="hero-form-btn ripple min-h-12 rounded bg-white px-[26px] font-heading text-[13px] font-extrabold uppercase tracking-wide text-ink transition hover:-translate-y-0.5 hover:bg-brand-green"
                 >
                   Перезвоните мне
-                </button>
+                </Button>
               </div>
               <div className="hp-field" aria-hidden="true">
                 <label htmlFor="hero-website">Не заполняйте это поле</label>

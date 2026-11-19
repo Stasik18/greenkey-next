@@ -108,29 +108,47 @@ export function LeadForm({
     const phone = String(formData.get("phone") ?? "").trim();
     const consent = formData.get("consent") === "1";
 
+    const validationErrors: string[] = [];
+    const invalidFields: string[] = [];
+
     if (!phone || phone.replace(/\D/g, "").length < 10) {
-      setStatus({
-        type: "error",
-        message: "Укажите корректный номер телефона, не менее 10 цифр.",
-      });
-      form.querySelector<HTMLInputElement>('[name="phone"]')?.focus();
-      return;
+      validationErrors.push(
+        "Укажите корректный номер телефона, не менее 10 цифр.",
+      );
+      invalidFields.push("phone");
     }
 
     if (name && name.length < 2) {
-      setStatus({ type: "error", message: "Слишком короткое имя." });
-      form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
-      return;
+      validationErrors.push("Имя должно содержать не менее двух символов.");
+      invalidFields.push("name");
     }
 
     if (!consent) {
-      setStatus({
-        type: "error",
-        message: "Отметьте согласие на обработку персональных данных.",
+      validationErrors.push(
+        "Отметьте согласие на обработку персональных данных.",
+      );
+      invalidFields.push("consent");
+    }
+
+    if (validationErrors.length > 0) {
+      form.querySelectorAll<HTMLElement>("[name]").forEach((field) => {
+        field.setAttribute(
+          "aria-invalid",
+          invalidFields.includes(field.getAttribute("name") ?? "")
+            ? "true"
+            : "false",
+        );
       });
-      form.querySelector<HTMLInputElement>('[name="consent"]')?.focus();
+      setStatus({ type: "error", message: validationErrors.join(" ") });
+      form.querySelector<HTMLElement>(`[name="${invalidFields[0]}"]`)?.focus();
       return;
     }
+
+    form
+      .querySelectorAll<HTMLElement>('[aria-invalid="true"]')
+      .forEach((field) => {
+        field.setAttribute("aria-invalid", "false");
+      });
 
     const payload: Record<string, unknown> = {};
     Object.assign(payload, extraData);
@@ -210,7 +228,16 @@ export function LeadForm({
       data-lead-form={source}
       noValidate
       onSubmit={handleSubmit}
-      onChange={() => setStatus(null)}
+      onChange={(event) => {
+        const target = event.target;
+        if (
+          target instanceof HTMLElement &&
+          target.getAttribute("aria-invalid") === "true"
+        ) {
+          target.setAttribute("aria-invalid", "false");
+        }
+        setStatus(null);
+      }}
       aria-busy={isSubmitting}
     >
       <fieldset disabled={isSubmitting} className="contents">

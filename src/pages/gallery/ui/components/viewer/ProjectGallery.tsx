@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import Image from "next/image";
 
 import type { House, Photo } from "../../../model/gallery-data";
@@ -24,7 +25,8 @@ export function ProjectGallery({ house, onOpenPhoto }: ProjectGalleryProps) {
       </p>
       <div className="vw-project">
         {photos.map((photo, index) => (
-          <button
+          <Button
+            unstyled
             type="button"
             key={photo.src}
             className={photo.src.includes("plan-") ? "is-plan" : ""}
@@ -37,7 +39,7 @@ export function ProjectGallery({ house, onOpenPhoto }: ProjectGalleryProps) {
               width={560}
               height={380}
             />
-          </button>
+          </Button>
         ))}
       </div>
     </section>

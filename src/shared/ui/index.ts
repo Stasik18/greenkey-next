@@ -7,3 +7,5 @@ export { Checkbox } from "./checkbox/Checkbox";
 export { Typography } from "./typography/Typography";
 
 export type { IconName } from "./icon/Icon";
+
+export { Select } from "./select/Select";

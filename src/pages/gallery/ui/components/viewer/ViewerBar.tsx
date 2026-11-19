@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import type { House } from "../../../model/gallery-data";
 
 interface ViewerBarProps {
@@ -8,25 +9,27 @@ interface ViewerBarProps {
 export function ViewerBar({ house, onClose }: ViewerBarProps) {
   return (
     <div className="viewer-bar">
-      <button
+      <Button
+        unstyled
         type="button"
         className="viewer-back"
         onClick={onClose}
         data-autofocus
       >
         ← <span>Все объекты</span>
-      </button>
+      </Button>
       <div className="vb-title" id="vb-title">
         {house.model} · {house.address}
       </div>
-      <button
+      <Button
+        unstyled
         type="button"
         className="viewer-close"
         aria-label="Закрыть"
         onClick={onClose}
       >
         ×
-      </button>
+      </Button>
     </div>
   );
 }

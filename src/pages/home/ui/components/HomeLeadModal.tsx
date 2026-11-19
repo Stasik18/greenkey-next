@@ -2,6 +2,7 @@
 
 import type { RefObject } from "react";
 
+import { Button, Checkbox, Input, Select } from "@/shared/ui";
 import { LeadForm } from "@/shared/ui/lead-form";
 import { FormField } from "./FormField";
 
@@ -39,7 +40,8 @@ export function HomeLeadModal({
         aria-labelledby="home-modal-title"
         className="home-modal-panel relative my-auto w-full max-w-xl shrink-0 rounded-2xl bg-white p-6 text-ink shadow-2xl sm:p-8 md:p-9"
       >
-        <button
+        <Button
+          unstyled
           type="button"
           onClick={onClose}
           aria-label="Закрыть окно"
@@ -47,7 +49,7 @@ export function HomeLeadModal({
           className="absolute right-4 top-4 grid size-10 place-items-center rounded-full border border-border text-2xl text-muted transition hover:bg-surface-muted hover:text-ink"
         >
           ×
-        </button>
+        </Button>
 
         <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
           {isMeasure ? "Бесплатная услуга" : "Обратный звонок"}
@@ -70,7 +72,8 @@ export function HomeLeadModal({
           className="contact-form mt-7 space-y-4"
         >
           <FormField id={`${activeModal}-name`} label="Ваше имя">
-            <input
+            <Input
+              unstyled
               id={`${activeModal}-name`}
               name="name"
               autoComplete="name"
@@ -80,7 +83,8 @@ export function HomeLeadModal({
             />
           </FormField>
           <FormField id={`${activeModal}-phone`} label="Телефон">
-            <input
+            <Input
+              unstyled
               id={`${activeModal}-phone`}
               name="phone"
               type="tel"
@@ -96,7 +100,8 @@ export function HomeLeadModal({
           {isMeasure && (
             <>
               <FormField id="measure-address" label="Адрес объекта">
-                <input
+                <Input
+                  unstyled
                   id="measure-address"
                   name="address"
                   autoComplete="street-address"
@@ -106,7 +111,8 @@ export function HomeLeadModal({
                 />
               </FormField>
               <FormField id="measure-service" label="Тип услуги">
-                <select
+                <Select
+                  unstyled
                   id="measure-service"
                   name="service"
                   className={inputClass}
@@ -120,7 +126,7 @@ export function HomeLeadModal({
                   <option>Инженерные работы</option>
                   <option>Хоумстейджинг</option>
                   <option>Другое</option>
-                </select>
+                </Select>
               </FormField>
             </>
           )}
@@ -138,35 +144,32 @@ export function HomeLeadModal({
             />
           </div>
 
-          <div className="form-consent-check flex items-start gap-2 text-xs leading-relaxed text-muted">
-            <input
-              id={`${activeModal}-consent`}
-              name="consent"
-              type="checkbox"
-              value="1"
-              required
-              className="mt-0.5 accent-brand-green"
-            />
-            <label htmlFor={`${activeModal}-consent`}>
-              Согласен на обработку персональных данных и принимаю{" "}
-              <a
-                href="/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                политику конфиденциальности
-              </a>
-              .
-            </label>
-          </div>
+          <Checkbox
+            id={`${activeModal}-consent`}
+            name="consent"
+            value="1"
+            required
+            className="form-consent-check flex items-start gap-2 text-xs leading-relaxed text-muted"
+          >
+            Согласен на обработку персональных данных и принимаю{" "}
+            <a
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              политику конфиденциальности
+            </a>
+            .
+          </Checkbox>
 
-          <button
+          <Button
+            unstyled
             type="submit"
             className="form-submit w-full rounded-lg bg-brand-green px-6 py-4 font-heading text-sm font-extrabold uppercase tracking-wide text-ink transition hover:bg-brand-green/90"
           >
             {isMeasure ? "Записаться на замер" : "Жду звонка"}
-          </button>
+          </Button>
         </LeadForm>
       </div>
     </div>

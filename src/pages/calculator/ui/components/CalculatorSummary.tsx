@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import { BASE_PRICE } from "../../model/options";
 import type { CalculatorRow } from "../../lib/calculator";
 import { formatMoney } from "../../lib/calculator";
@@ -58,9 +59,14 @@ export function CalculatorSummary({
           >
             Оставить заявку
           </a>
-          <button type="button" className="summary-reset" onClick={onReset}>
+          <Button
+            unstyled
+            type="button"
+            className="summary-reset"
+            onClick={onReset}
+          >
             Сбросить всё
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

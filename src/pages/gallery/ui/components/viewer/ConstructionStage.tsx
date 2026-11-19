@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import Image from "next/image";
 
 import type { Photo, Stage } from "../../../model/gallery-data";
@@ -27,7 +28,8 @@ export function ConstructionStage({
         <div className="tl-photo">
           <span className="tl-stagetag">{stage.label}</span>
           {amount ? (
-            <button
+            <Button
+              unstyled
               type="button"
               className="tl-main-photo"
               onClick={() => onOpenPhoto(photos, 0)}
@@ -39,7 +41,7 @@ export function ConstructionStage({
                 fill
                 sizes="(max-width: 700px) 100vw, 60vw"
               />
-            </button>
+            </Button>
           ) : (
             <div className="tl-ph">
               <span>
@@ -58,7 +60,8 @@ export function ConstructionStage({
         {amount > 1 && (
           <div className="tl-strip">
             {photos.slice(1).map((photo, photoNumber) => (
-              <button
+              <Button
+                unstyled
                 type="button"
                 className="tl-thumb"
                 key={photo.src}
@@ -72,7 +75,7 @@ export function ConstructionStage({
                   width={120}
                   height={90}
                 />
-              </button>
+              </Button>
             ))}
           </div>
         )}

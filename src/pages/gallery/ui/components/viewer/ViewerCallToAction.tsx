@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui";
 import Link from "next/link";
 
 interface ViewerCallToActionProps {
@@ -19,9 +20,14 @@ export function ViewerCallToAction({
         </p>
       </div>
       <div className="cta-btns">
-        <button type="button" className="btn-primary" onClick={onOpenCall}>
+        <Button
+          unstyled
+          type="button"
+          className="btn-primary"
+          onClick={onOpenCall}
+        >
           Обсудить проект
-        </button>
+        </Button>
         <Link className="btn-outline" href="/calculator" onClick={onClose}>
           Рассчитать стоимость
         </Link>
