@@ -1,0 +1,14 @@
+export { HeroSection } from "./HeroSection";
+export { NumbersSection } from "./NumbersSection";
+export { AmbassadorSection } from "./AmbassadorSection";
+export { MarqueeSection } from "./MarqueeSection";
+export { KarkasSection } from "./KarkasSection";
+export { RepairSection } from "./RepairSection";
+export { BuildSection } from "./BuildSection";
+export { ProcessSection } from "./ProcessSection";
+export { ServicesSection } from "./ServicesSection";
+export { PaymentSection } from "./PaymentSection";
+export { PartnersSection } from "./PartnersSection";
+export { GallerySection } from "./GallerySection";
+export { VacanciesSection } from "./VacanciesSection";
+export { ContactsSection } from "./ContactsSection";

@@ -14,6 +14,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconPosition?: IconPosition;
   isLoading?: boolean;
   fullWidth?: boolean;
+  unstyled?: boolean;
   ref?: Ref<HTMLButtonElement>;
   children: ReactNode;
 }
@@ -62,6 +63,7 @@ export function Button({
   iconPosition = "left",
   isLoading = false,
   fullWidth = false,
+  unstyled = false,
   disabled,
   className,
   children,
@@ -72,10 +74,12 @@ export function Button({
   const isDisabled = disabled || isLoading;
 
   const buttonClassName = clsx(
-    baseStyles,
-    variantStyles[variant],
-    sizeStyles[size],
-    fullWidth && "w-full",
+    !unstyled && [
+      baseStyles,
+      variantStyles[variant],
+      sizeStyles[size],
+      fullWidth && "w-full",
+    ],
     className,
   );
 
@@ -100,7 +104,7 @@ export function Button({
         )
       )}
 
-      <span>{children}</span>
+      {unstyled ? children : <span>{children}</span>}
 
       {!isLoading && iconName && iconPosition === "right" && (
         <Icon name={iconName} size={iconSizes[size]} />

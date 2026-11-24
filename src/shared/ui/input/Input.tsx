@@ -6,6 +6,7 @@ type InputVariant = "light" | "dark";
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   variant?: InputVariant;
   invalid?: boolean;
+  unstyled?: boolean;
 }
 
 const variants: Record<InputVariant, string> = {
@@ -16,6 +17,7 @@ const variants: Record<InputVariant, string> = {
 export function Input({
   variant = "light",
   invalid = false,
+  unstyled = false,
   className,
   type = "text",
   ...props
@@ -25,12 +27,13 @@ export function Input({
       type={type}
       aria-invalid={invalid || undefined}
       className={clsx(
-        "w-full min-w-0 rounded border-2 px-4 py-3.5 text-[15px]",
-        "outline-none transition-colors duration-200",
-        "focus:border-brand-green",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        variants[variant],
-        invalid ? "border-red-500 focus:border-red-500" : "",
+        !unstyled && [
+          "w-full min-w-0 rounded border-2 px-4 py-3.5 text-[15px]",
+          "outline-none transition-colors duration-200 focus:border-brand-green",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          variants[variant],
+          invalid && "border-red-500 focus:border-red-500",
+        ],
         className,
       )}
       {...props}

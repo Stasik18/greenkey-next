@@ -1,0 +1,644 @@
+/* Общие элементы интерфейса публичных страниц.
+   ------------------------------------------------------------------
+   Файл владеет ТОЛЬКО перечисленными здесь компонентами: бургер,
+   мобильное меню, компактная телефонная кнопка, блокировка прокрутки и
+   пара утилит доступности. Инлайновые стили страниц эти классы не
+   переопределяют — иначе вернулись бы три несовместимые реализации
+   меню, ради которых файл и заведён.
+
+   Порядок подключения: тег <link> идёт ПОСЛЕ инлайнового <style>
+   страницы, поэтому при равной специфичности выигрывают правила отсюда.
+   Фирменные переменные берутся у страницы, значения после запятой —
+   только страховка на случай подключения к странице без :root. */
+
+/* ── Утилиты ─────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Блокировка прокрутки фона ───────────────────────────────────────
+   Прокрутка гасится `overflow`, а НЕ переводом body в position:fixed.
+   Второй способ надёжнее держит iOS, но обнуляет scrollTop, и на главной
+   это заметно: блок «Как рождается ваш дом» ведёт GSAP ScrollTrigger,
+   который на обнулении разбирает дом до нулевого этапа прямо за открытым
+   окном, а при закрытии собирает обратно. Здесь позиция прокрутки не
+   двигается вовсе, поэтому и восстанавливать её нечем — она не терялась.
+   Остаточный риск: на старом iOS фон под слоем можно дотянуть пальцем. */
+html.ui-locked {
+  overflow: hidden;
+}
+body.ui-locked {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ── Бургер ──────────────────────────────────────────────────────────
+   44 × 44 — минимальная цель по WCAG 2.5.5. Полоски остались 24 × 2:
+   растёт область нажатия, а не рисунок. */
+.nav-burger {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--black, #1a1a1a);
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+.nav-burger:focus-visible {
+  outline: 2px solid var(--green, #22c55e);
+  outline-offset: 2px;
+}
+.nav-burger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav-burger[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-burger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Правая группа шапки: телефон и бургер держатся вместе, поэтому
+   `justify-content:space-between` разводит по краям логотип и группу,
+   а не каждый элемент по отдельности. */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Кнопка звонка ───────────────────────────────────────────────────
+   На узком экране текстовый номер в шапке съедал всю строку: на 320 px
+   он занимал 174 px из 320, и бургер уезжал за край экрана целиком.
+   Решение владельца от 2026-08-06: вынести кнопку из шапки в правый
+   нижний угол — там она не спорит с логотипом и бургером и оказывается
+   под большим пальцем. Полный номер остаётся в меню и в контактах.
+
+   КНОПКА ЛЕЖИТ В <body>, А НЕ В ШАПКЕ, и это обязательное условие:
+   у шапки есть `backdrop-filter`, а он делает её контейнером
+   позиционирования — `position:fixed` внутри неё считался бы от шапки,
+   и «плавающая» кнопка приклеилась бы к её углу. Та же причина, по
+   которой снаружи вынесена панель мобильного меню. */
+.site-call {
+  display: none;
+  position: fixed;
+  z-index: 90;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  width: 54px;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--green, #22c55e);
+  color: var(--black, #1a1a1a);
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.15s,
+    background 0.2s;
+}
+.site-call svg {
+  width: 23px;
+  height: 23px;
+  display: block;
+}
+.site-call:active {
+  transform: scale(0.94);
+}
+.site-call:focus-visible {
+  outline: 3px solid var(--black, #1a1a1a);
+  outline-offset: 3px;
+}
+
+/* Кнопка уступает подвалу.
+
+   Она висит в углу окна и накрывает собой то, что в этот угол попало. У
+   подвала это строка «© 2011 Зелёный ключ · Строительство и ремонт в
+   Москве» — на 390 px кнопка съедала её хвост вместе со ссылкой. Прятать
+   её там не жалко: в подвале и так есть телефон, а выше по странице
+   кнопка остаётся единственным быстрым способом позвонить.
+
+   `visibility` в паре с `opacity`, а не `display:none`: анимация перехода
+   должна отработать, но кнопка при этом обязана уйти и с клавиатуры, и из
+   скринридера — иначе фокус проваливается в невидимый элемент. */
+.site-call.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.9);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0s linear 0.22s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-call,
+  .site-call.is-hidden {
+    transition: none;
+  }
+}
+
+/* Промежуток между настольной шапкой и мобильной. Шапка ужимается
+   ступенями, и каждая граница стоит там, где предыдущей ступени
+   перестаёт хватать места. Бургер — последнее средство: пока пункты
+   помещаются, в панель уходить незачем, достаточно сжать промежутки и
+   заменить текстовый номер значком.
+
+   ГРАНИЦЫ ПЕРЕСЧИТАНЫ ПОД ДЕВЯТЬ ПУНКТОВ (2026-10-21, добавлены
+   «Партнёры» и «Вакансии»). Замерено в браузере по ширине, которая
+   нужна ряду целиком — логотип, пункты с их полями, номер и отступы
+   шапки:
+     полный набор         — 1407 px  → ступень 1 ниже 1420
+     плотные промежутки   — 1279 px  → ступень 2 ниже 1290
+     номер значком        — 1097 px  → бургер ниже 1110
+   При семи пунктах те же три числа были 1150, 1212 и 949: каждый лишний
+   пункт стоит шапке около 75 px, поэтому границы и переехали вверх. */
+/* Первая ступень: те же элементы, только плотнее. */
+@media (max-width: 1420px) {
+  nav,
+  nav.scrolled {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .nav-links {
+    gap: 16px;
+    margin: 0 16px;
+  }
+  .nav-cta {
+    padding: 11px 16px;
+  }
+}
+/* Вторая ступень: номер становится значком. */
+@media (max-width: 1290px) {
+  .site-call {
+    display: inline-flex;
+  }
+  .nav-cta {
+    display: none;
+  }
+  .nav-links {
+    gap: 14px;
+    margin: 0 14px;
+  }
+}
+/* Третья ступень: меню уходит в панель. Здесь же задаются компактные
+   отступы шапки и высота логотипа — иначе в этой полосе они достались бы
+   от настольной раскладки, а бургер бы уже показывался. */
+@media (max-width: 1110px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-burger {
+    display: flex;
+  }
+  .nav-logo {
+    display: inline-block;
+    padding: 11px 0;
+  }
+  nav,
+  nav.scrolled {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* ── Мобильное меню ──────────────────────────────────────────────────
+   Панель лежит в <body> отдельным узлом, а НЕ внутри <nav>, и это
+   главное в её устройстве. У шапки есть `backdrop-filter`, а он создаёт
+   контейнер позиционирования: `position:fixed` внутри такой шапки
+   считается от неё, и «полноэкранная» панель получала высоту шапки —
+   около 52 px. Снаружи считать не от чего, кроме окна. */
+.mmenu {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  background: var(--white, #fff);
+  color: var(--black, #1a1a1a);
+  overscroll-behavior: contain;
+}
+.mmenu.is-open {
+  display: flex;
+}
+.mmenu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: calc(12px + env(safe-area-inset-top)) 20px 12px;
+  border-bottom: 1px solid var(--gray-mid, #e8e8e4);
+  flex-shrink: 0;
+}
+/* inline-block, а НЕ inline-flex: во флекс-контейнере текстовые узлы
+   становятся анонимными элементами, и пробел между «Зелёный» и «ключ»
+   схлопывается — логотип читается как «Зелёныйключ». Высота 44 px
+   набирается отступами. */
+.mmenu-logo {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--black, #1a1a1a);
+  text-decoration: none;
+  display: inline-block;
+  padding: 11px 0;
+}
+.mmenu-logo span {
+  color: var(--green, #22c55e);
+}
+.mmenu-close {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gray, #f5f5f3);
+  color: var(--black, #1a1a1a);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mmenu-close svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+.mmenu-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 20px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.mmenu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.mmenu-list li {
+  margin: 0;
+}
+.mmenu-list a {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 10px 4px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  color: var(--black, #1a1a1a);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+}
+.mmenu-list li:last-child a {
+  border-bottom: 0;
+}
+.mmenu-list a[aria-current="page"] {
+  color: var(--green, #22c55e);
+}
+.mmenu-foot {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px calc(16px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--gray-mid, #e8e8e4);
+}
+.mmenu-tel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  border-radius: 10px;
+  background: var(--green, #22c55e);
+  color: var(--black, #1a1a1a);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+.mmenu-tel svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.mmenu-note {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--muted, #6b6b6b);
+  text-align: center;
+}
+.mmenu a:focus-visible,
+.mmenu button:focus-visible {
+  outline: 2px solid var(--green, #22c55e);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Панель — единственный видимый слой, поэтому выше 960 px её быть не может
+   даже при рассинхроне классов (поворот экрана, изменение размера окна). */
+@media (min-width: 960px) {
+  .mmenu {
+    display: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ФОРМЫ ЗАЯВОК
+
+   Единый вид для всех пяти форм проекта: две модалки и контактная форма
+   на главной, модалка в галерее, смета в калькуляторе. Раньше каждая
+   страница оформляла состояния отправки по-своему — здесь одно место.
+
+   Переменные берутся из инлайновых стилей страниц; запасные значения
+   указаны на случай, если файл подключат отдельно.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Ловушка для ботов.
+
+   Убрать поле из потока, но оставить в DOM: автоматы заполняют все input
+   подряд, человек его не видит и не может на него перейти. Именно
+   `position:absolute` с выносом за экран, а не `display:none` — часть
+   ботов сознательно пропускает скрытые через display поля. */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Чекбокс согласия.
+
+   Непредзаполненный и обязательный: согласие на обработку персональных
+   данных должно быть действием человека, а не состоянием по умолчанию.
+
+   СТОИТ ПЕРЕД КНОПКОЙ ОТПРАВКИ, и это не вкусовщина. Сначала галочка
+   лежала под кнопкой: человек жал «Отправить», получал отказ проверки и
+   только тогда узнавал, что от него требовалось согласие — особенно
+   обидно на телефоне, где кнопка и галочка не помещаются в один экран.
+   Условие показывается до действия, а не после. Отступ снизу больше
+   верхнего: между галочкой и кнопкой встаёт ещё блок `.lead-status`.
+
+   Раскладка — сетка из двух колонок, а не флекс-ряд: скрипт вставляет
+   подсказку об ошибке третьим узлом внутрь этого же контейнера, и во
+   флексе она вставала третьей КОЛОНКОЙ — на 390 px текст согласия
+   сжимался до 207 px, а подсказке доставалось 97 px на четыре строки.
+   В сетке подсказка просто уходит во вторую строку под текст. */
+.form-consent-check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  column-gap: 10px;
+  margin: 12px 0 14px;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--muted, #6b6b6b);
+  text-align: left;
+}
+.form-consent-check input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--green, #22c55e);
+  cursor: pointer;
+}
+/* Пальцем — по цели 24 × 24 (минимум по WCAG 2.5.8), мышью — прежние 18:
+   на настольном экране крупная галочка спорит с мелким текстом рядом, а
+   промаха мышью не бывает. Метка кликается в обоих случаях, но полагаться
+   на неё нельзя: попасть хотят именно в квадратик. */
+@media (pointer: coarse) {
+  .form-consent-check input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+  }
+}
+.form-consent-check label {
+  cursor: pointer;
+  font-size: inherit;
+  color: inherit;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0;
+}
+.form-consent-check a {
+  color: var(--muted, #6b6b6b);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.form-consent-check a:hover {
+  color: var(--orange, #ff6b2b);
+}
+.form-consent-check input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--green, #22c55e);
+  outline-offset: 2px;
+}
+.form-consent-check input[type="checkbox"].is-invalid {
+  outline: 2px solid #d64545;
+  outline-offset: 2px;
+}
+
+/* Сообщение о результате отправки. Пустой блок не занимает места. */
+.lead-status {
+  display: none;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  text-align: left;
+}
+.lead-status.is-error,
+.lead-status.is-success {
+  display: block;
+}
+.lead-status.is-error {
+  background: #fdeded;
+  border: 1px solid #f3c6c6;
+  color: #8e2020;
+}
+.lead-status.is-success {
+  background: #f0fdf4;
+  border: 1px solid #c3e6cd;
+  color: #15803d;
+}
+.lead-status b {
+  font-weight: 700;
+}
+.lead-status-alt {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.79rem;
+  opacity: 0.9;
+}
+.lead-status-alt a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* Подпись над рядом контактов в сообщении об ошибке. */
+.lead-status-hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.79rem;
+  opacity: 0.9;
+}
+
+/* Ошибка конкретного поля. */
+.field-error {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.74rem;
+  line-height: 1.35;
+  color: #c0392b;
+}
+
+/* Ошибка согласия встаёт во вторую строку сетки, ровно под текст. */
+.form-consent-check .field-error {
+  grid-column: 2;
+  margin: 5px 0 0;
+}
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+  border-color: #d64545 !important;
+}
+input.is-invalid:focus,
+select.is-invalid:focus,
+textarea.is-invalid:focus {
+  border-color: #d64545 !important;
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.14);
+}
+
+/* Кнопка в момент подтверждённой отправки. Зелёный фон появляется только
+   после ответа сервера — до этого кнопка просто заблокирована. */
+.is-sent {
+  background: var(--green, #22c55e) !important;
+  color: #fff !important;
+}
+button[disabled] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+/* ── Ряды контактов ───────────────────────────────────────────────────
+   Два места показывают одни и те же каналы связи: блок успеха в
+   калькуляторе (`.lead-after`) и сообщение об ошибке отправки
+   (`.lead-status-actions`). Оформление у них общее — иначе одинаковые по
+   смыслу ссылки разъезжаются по виду, как уже разъехались обработчики
+   форм до появления `lead-form.js`.
+
+   В ошибке это был ряд строчных ссылок высотой 15 px. Именно там цель
+   важнее всего: заявка не ушла, и запасной канал — единственное, что
+   человеку осталось. Теперь и там, и там «таблетка» в 44 px. */
+.lead-after {
+  display: none;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.lead-after.is-visible {
+  display: flex;
+}
+.lead-status-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.lead-after a,
+.lead-status-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--gray, #f5f5f3);
+  border: 1px solid var(--gray-mid, #e8e8e4);
+  color: var(--black, #1a1a1a);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.lead-after a:hover,
+.lead-status-actions a:hover {
+  border-color: var(--green, #22c55e);
+}
+.lead-after svg,
+.lead-status-actions svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+/* На розовом поле ошибки серая заливка «таблетки» сливается с фоном. */
+.lead-status.is-error .lead-status-actions a {
+  background: var(--white, #fff);
+  border-color: #ebc3c3;
+}
+.lead-status.is-error .lead-status-actions a:hover {
+  border-color: #8e2020;
+}
+
+/* Подпись к ряду контактов: без неё после автоматического сброса статуса
+   кнопки остаются на форме без всякого объяснения, откуда они взялись. */
+.lead-after-note {
+  flex: 0 0 100%;
+  margin: 0 0 2px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted, #6b6b6b);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead-status {
+    transition: none;
+  }
+}
